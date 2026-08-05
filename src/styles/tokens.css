@@ -1,0 +1,145 @@
+:root {
+  /* Colors (style guide docs) */
+  --color-bg: #E0D8CC;
+  --color-text: #322D28;
+  --color-error: #8A2A2A;
+  --color-intro-bg: #322D28;
+  --color-intro-fg: #E0D8CC;
+  --color-text-muted-70: rgba(50, 45, 40, 0.7);
+  --color-text-muted-60: rgba(50, 45, 40, 0.6);
+  --color-text-muted-50: rgba(50, 45, 40, 0.5);
+  --color-text-muted-40: rgba(50, 45, 40, 0.4);
+  --color-text-muted-20: rgba(50, 45, 40, 0.2);
+  --color-overlay-backdrop: rgba(50, 45, 40, 0.7);
+
+  /* Fonts */
+  --font-display: 'Fahkwang', serif;
+  --font-body: 'Manrope', sans-serif;
+
+  /* Desktop typography (style guide docs) */
+  --text-display-size: 52px;
+  --text-display-line: 57px;
+  --text-display-tracking: 0.02em;
+
+  --text-menu-size: 11px;
+  --text-menu-line: 20px;
+  --text-menu-tracking: 0.04em;
+
+  --text-label-size: 11px;
+  --text-label-line: 14px;
+  --text-label-tracking: 0.11em;
+
+  --text-body-size: 14px;
+  --text-body-line: 25px;
+  --text-body-tracking: 0.03em;
+
+  --text-page-title-size: 19px;
+  --text-page-title-line: 27px;
+  --text-page-title-tracking: 0.03em;
+
+  --text-page-subtitle-size: 14px;
+  --text-page-subtitle-line: 25px;
+  --text-page-subtitle-tracking: 0.03em;
+  --text-page-subtitle-weight: 500;
+
+  --text-menu-link-size: 13px;
+  --text-menu-link-line: 24px;
+  --text-menu-link-tracking: 0.03em;
+
+  --text-form-label-size: 13px;
+  --text-form-label-line: 18px;
+  --text-form-label-tracking: 0.03em;
+
+  --text-form-meta-size: 11px;
+  --text-form-meta-line: 18px;
+  --text-form-meta-tracking: 0.03em;
+
+  --text-cta-size: 13px;
+  --text-cta-line: 18px;
+  --text-cta-tracking: 0.03em;
+
+  --text-footer-contact-size: 13px;
+  --text-footer-contact-line: 24px;
+
+  --text-footer-legal-size: 12px;
+  --text-footer-legal-line: 24px;
+
+  --text-footer-note-size: 12px;
+  --text-footer-note-line: 18px;
+
+  /* Spacing (style guide docs) */
+  --space-page-padding: 50px;
+  --space-header-height: 77px;
+  --space-logo-offset: 30px;
+  --space-footer-padding: 30px;
+  --content-block-width: 560px;
+
+  /* Link underline mechanics (style guide docs) */
+  --link-underline-thickness: 0.03em;
+  --link-underline-offset: 0.4em;
+
+  /* Mobile typography/spacing — captured now for a future responsive phase,
+     not consumed by any component yet. Prefixed so they can't be applied
+     by accident before real mobile layouts exist. */
+  --mobile-text-display-size: 34px;
+  --mobile-text-display-line: 38px;
+  --mobile-text-menu-size: 9px;
+  --mobile-text-menu-line: 16px;
+  --mobile-text-label-size: 9px;
+  --mobile-text-label-line: 12px;
+  --mobile-text-body-size: 12px;
+  --mobile-text-body-line: 22px;
+  --mobile-text-page-title-size: 18px;
+  --mobile-text-page-title-line: 26px;
+  --mobile-text-page-subtitle-size: 12px;
+  --mobile-text-page-subtitle-line: 22px;
+  --mobile-text-menu-link-size: 11px;
+  --mobile-text-menu-link-line: 20px;
+  --mobile-text-form-label-size: 11px;
+  --mobile-text-form-label-line: 16px;
+  --mobile-text-form-meta-size: 10px;
+  --mobile-text-form-meta-line: 16px;
+  --mobile-text-cta-size: 11px;
+  --mobile-text-cta-line: 16px;
+  --mobile-text-footer-contact-size: 11px;
+  --mobile-text-footer-contact-line: 20px;
+  --mobile-text-footer-legal-size: 10px;
+  --mobile-text-footer-legal-line: 20px;
+  --mobile-text-footer-note-size: 10px;
+  --mobile-text-footer-note-line: 14px;
+  --mobile-space-page-padding: 20px;
+  --mobile-space-header-height: 54px;
+  --mobile-space-logo-offset: 20px;
+  --mobile-space-footer-padding: 20px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--color-text-muted-60);
+  text-decoration-thickness: var(--link-underline-thickness);
+  text-underline-offset: var(--link-underline-offset);
+}
+
+a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
