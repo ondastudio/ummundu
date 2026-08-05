@@ -1,0 +1,74 @@
+---
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { footerCopy } from '../content/copy/footer';
+
+interface Props {
+  lang: 'pt' | 'en';
+  showContactLink?: boolean;
+}
+
+const { lang, showContactLink = true } = Astro.props;
+const { contact, contactHref, legalLinks, legalNote } = footerCopy[lang];
+---
+<footer class="site-footer" data-has-contact-link={showContactLink}>
+  {showContactLink && (
+    <a href={contactHref} class="site-footer__contact">{contact}</a>
+  )}
+  <div class="site-footer__utilities">
+    <div class="site-footer__legal-links">
+      {legalLinks.map((link) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
+    </div>
+    <LanguageSwitcher lang={lang} context="footer" />
+  </div>
+  <div class="site-footer__note">
+    <p>{legalNote}</p>
+    <p>© 2026 UMMUNDU</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    width: var(--content-block-width);
+    display: flex;
+    flex-direction: column;
+    gap: 71px;
+    padding-bottom: var(--space-footer-padding);
+    font-family: var(--font-body);
+  }
+
+  .site-footer[data-has-contact-link='false'] {
+    gap: 74px;
+  }
+
+  .site-footer__contact {
+    font-size: var(--text-footer-contact-size);
+    line-height: var(--text-footer-contact-line);
+  }
+
+  .site-footer__utilities {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .site-footer__legal-links {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+    font-size: var(--text-footer-legal-size);
+    line-height: var(--text-footer-legal-line);
+  }
+
+  .site-footer__note {
+    text-align: right;
+    font-size: var(--text-footer-note-size);
+    line-height: var(--text-footer-note-line);
+  }
+
+  .site-footer__note p {
+    margin: 0;
+  }
+</style>
