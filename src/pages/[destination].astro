@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DestinationContent from '../components/pages/DestinationContent.astro';
+
+export async function getStaticPaths() {
+  const destinations = await getCollection('destinations');
+  return destinations.map((entry) => ({
+    params: { destination: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+---
+<BaseLayout lang="pt" title={`Ummundu — ${entry.data.title_pt}`}>
+  <DestinationContent entry={entry} lang="pt" />
+</BaseLayout>
