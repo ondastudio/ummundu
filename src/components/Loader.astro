@@ -14,7 +14,7 @@
     justify-content: center;
     z-index: 300;
     opacity: 1;
-    transition: opacity 250ms ease;
+    transition: opacity 250ms ease-out;
   }
 
   .loader.is-hidden {
@@ -32,8 +32,8 @@
   window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
     if (!loader) return;
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       loader.classList.add('is-hidden');
-    });
+    }, 2500);
   });
 </script>
