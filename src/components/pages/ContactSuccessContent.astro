@@ -1,0 +1,43 @@
+---
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import { contactSuccessCopy } from '../../content/copy/contactSuccess';
+
+interface Props {
+  lang: 'pt' | 'en';
+}
+
+const { lang } = Astro.props;
+const { label, message } = contactSuccessCopy[lang];
+---
+<Header lang={lang} variant="withMenu" />
+<main class="contact-success">
+  <p class="contact-success__label">{label}</p>
+  <p class="contact-success__message">{message}</p>
+</main>
+<Footer lang={lang} showContactLink={false} />
+
+<style>
+  .contact-success {
+    width: var(--content-block-width);
+    margin: 0 auto;
+    padding-top: 244px;
+    padding-bottom: 100px;
+  }
+
+  .contact-success__label {
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-line);
+    letter-spacing: var(--text-label-tracking);
+    text-transform: uppercase;
+    color: var(--color-text-muted-70);
+    margin: 0 0 14px;
+  }
+
+  .contact-success__message {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    letter-spacing: var(--text-body-tracking);
+    margin: 0;
+  }
+</style>
