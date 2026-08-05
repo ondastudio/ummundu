@@ -1,0 +1,202 @@
+---
+import { getCollection } from 'astro:content';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import { contactCopy } from '../../content/copy/contact';
+import { getDepartureYears } from '../../lib/getDepartureYears';
+
+interface Props {
+  lang: 'pt' | 'en';
+}
+
+const { lang } = Astro.props;
+const t = contactCopy[lang];
+const destinations = await getCollection('destinations');
+const years = getDepartureYears(new Date().getFullYear(), 3);
+---
+<Header lang={lang} variant="withMenu" />
+<main class="contact">
+  <p class="contact__label">{t.label}</p>
+  <p class="contact__intro">{t.intro}</p>
+
+  <form class="contact__form" action="https://formspree.io/f/REPLACE_WITH_FORM_ID" method="POST">
+    <input type="hidden" name="_next" value={`https://REPLACE_WITH_DOMAIN${t.successRedirect}`} />
+
+    <div class="contact__field">
+      <label for={`departure-month-${lang}`}>{t.fields.departure}</label>
+      <div class="contact__field-group">
+        <select id={`departure-month-${lang}`} name="departure_month">
+          <option value="" disabled selected>{t.fields.month}</option>
+          {t.months.map((month) => <option value={month}>{month}</option>)}
+        </select>
+        <select id={`departure-year-${lang}`} name="departure_year">
+          <option value="" disabled selected>{t.fields.year}</option>
+          {years.map((year) => <option value={year}>{year}</option>)}
+        </select>
+      </div>
+    </div>
+
+    <div class="contact__field">
+      <label for={`destination-${lang}`}>{t.fields.destination} <span class="contact__required">*</span></label>
+      <select id={`destination-${lang}`} name="destination" required>
+        <option value="" disabled selected></option>
+        {destinations.map((entry) => (
+          <option value={entry.id}>
+            {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
+            {' · '}
+            {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <div class="contact__field">
+      <label for={`duration-${lang}`}>{t.fields.duration} <span class="contact__required">*</span></label>
+      <select id={`duration-${lang}`} name="duration" required>
+        <option value="" disabled selected></option>
+        {t.durations.map((duration) => <option value={duration}>{duration}</option>)}
+      </select>
+    </div>
+
+    <div class="contact__field">
+      <label for={`travellers-${lang}`}>{t.fields.travellers} <span class="contact__required">*</span></label>
+      <select id={`travellers-${lang}`} name="travellers" required>
+        <option value="" disabled selected></option>
+        {t.travellerOptions.map((option) => <option value={option}>{option}</option>)}
+      </select>
+    </div>
+
+    <div class="contact__field">
+      <label for={`investment-${lang}`}>{t.fields.investment} <span class="contact__required">*</span></label>
+      <select id={`investment-${lang}`} name="investment" required>
+        <option value="" disabled selected></option>
+        {t.investmentOptions.map((option) => <option value={option}>{option}</option>)}
+      </select>
+    </div>
+
+    <div class="contact__field">
+      <label for={`first-name-${lang}`}>{t.fields.firstName} <span class="contact__required">*</span></label>
+      <input type="text" id={`first-name-${lang}`} name="first_name" required />
+    </div>
+
+    <div class="contact__field">
+      <label for={`last-name-${lang}`}>{t.fields.lastName} <span class="contact__required">*</span></label>
+      <input type="text" id={`last-name-${lang}`} name="last_name" required />
+    </div>
+
+    <div class="contact__field">
+      <label for={`email-${lang}`}>{t.fields.email} <span class="contact__required">*</span></label>
+      <input type="email" id={`email-${lang}`} name="email" required />
+    </div>
+
+    <div class="contact__field">
+      <label for={`phone-${lang}`}>{t.fields.phone}</label>
+      <input type="tel" id={`phone-${lang}`} name="phone" />
+    </div>
+
+    <div class="contact__field contact__field--message">
+      <label for={`message-${lang}`}>{t.fields.message}</label>
+      <textarea id={`message-${lang}`} name="message"></textarea>
+    </div>
+
+    <p class="contact__required-note">{t.requiredNote}</p>
+    <p class="contact__privacy-note">
+      {t.privacyPrefix}<a href={t.privacyLinkHref}>{t.privacyLinkLabel}</a>{t.privacySuffix}
+    </p>
+
+    <button type="submit" class="contact__submit">{t.submit}</button>
+  </form>
+</main>
+<Footer lang={lang} showContactLink={false} />
+
+<style>
+  .contact {
+    width: var(--content-block-width);
+    margin: 0 auto;
+    padding-top: 244px;
+  }
+
+  .contact__label {
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-line);
+    letter-spacing: var(--text-label-tracking);
+    text-transform: uppercase;
+    color: var(--color-text-muted-70);
+    margin: 0 0 14px;
+  }
+
+  .contact__intro {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    letter-spacing: var(--text-body-tracking);
+    margin: 0 0 68px;
+  }
+
+  .contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+  }
+
+  .contact__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-bottom: 1px solid var(--color-text-muted-20);
+    padding-bottom: 4px;
+  }
+
+  .contact__field label {
+    font-size: var(--text-form-label-size);
+    line-height: var(--text-form-label-line);
+    letter-spacing: var(--text-form-label-tracking);
+  }
+
+  .contact__field select,
+  .contact__field input,
+  .contact__field textarea {
+    font-family: var(--font-body);
+    font-size: var(--text-form-label-size);
+    border: none;
+    background: transparent;
+    color: var(--color-text);
+    padding: 0;
+  }
+
+  .contact__field-group {
+    display: flex;
+    gap: 37px;
+  }
+
+  .contact__field--message textarea {
+    border: 1px solid var(--color-text-muted-20);
+    padding: 6px 10px;
+    height: 92px;
+    resize: vertical;
+  }
+
+  .contact__required {
+    font-weight: 300;
+  }
+
+  .contact__required-note,
+  .contact__privacy-note {
+    font-size: var(--text-form-meta-size);
+    line-height: var(--text-form-meta-line);
+    letter-spacing: var(--text-form-meta-tracking);
+    margin: 0;
+  }
+
+  .contact__submit {
+    align-self: center;
+    font-family: var(--font-body);
+    font-size: var(--text-cta-size);
+    line-height: var(--text-cta-line);
+    letter-spacing: var(--text-cta-tracking);
+    background: transparent;
+    border: 1px solid var(--color-text-muted-20);
+    padding: 8px 40px;
+    cursor: pointer;
+    color: var(--color-text);
+  }
+</style>

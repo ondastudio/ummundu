@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactPageContent from '../components/pages/ContactPageContent.astro';
+import { contactCopy } from '../content/copy/contact';
+---
+<BaseLayout lang="pt" title={contactCopy.pt.title}>
+  <ContactPageContent lang="pt" />
+</BaseLayout>
