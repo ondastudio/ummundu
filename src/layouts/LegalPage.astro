@@ -1,0 +1,91 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Section {
+  title: string;
+  body: string;
+}
+
+interface Props {
+  lang: 'pt' | 'en';
+  label: string;
+  title: string;
+  intro: string;
+  sections: Section[];
+}
+
+const { lang, label, title, intro, sections } = Astro.props;
+---
+<BaseLayout lang={lang} title={`Ummundu — ${title}`}>
+  <Header lang={lang} variant="withMenu" />
+  <main class="legal">
+    <p class="legal__label">{label}</p>
+    <h1 class="legal__title">{title}</h1>
+    <p class="legal__intro">{intro}</p>
+    <div class="legal__sections">
+      {sections.map((section, index) => (
+        <section class="legal__section">
+          <h2 class="legal__section-title">{index + 1}. {section.title}</h2>
+          <p class="legal__section-body">{section.body}</p>
+        </section>
+      ))}
+    </div>
+  </main>
+  <Footer lang={lang} />
+</BaseLayout>
+
+<style>
+  .legal {
+    width: var(--content-block-width);
+    margin: 0 auto;
+    padding-top: 244px;
+    padding-bottom: 100px;
+  }
+
+  .legal__label {
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-line);
+    letter-spacing: var(--text-label-tracking);
+    text-transform: uppercase;
+    color: var(--color-text-muted-70);
+    margin: 0 0 14px;
+  }
+
+  .legal__title {
+    font-size: var(--text-page-title-size);
+    line-height: var(--text-page-title-line);
+    letter-spacing: var(--text-page-title-tracking);
+    font-weight: normal;
+    margin: 0 0 16px;
+  }
+
+  .legal__intro {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    letter-spacing: var(--text-body-tracking);
+    margin: 0 0 68px;
+  }
+
+  .legal__sections {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+  }
+
+  .legal__section-title {
+    font-size: var(--text-page-subtitle-size);
+    line-height: var(--text-page-subtitle-line);
+    letter-spacing: var(--text-page-subtitle-tracking);
+    font-weight: var(--text-page-subtitle-weight);
+    margin: 0 0 12px;
+  }
+
+  .legal__section-body {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    letter-spacing: var(--text-body-tracking);
+    margin: 0;
+  }
+</style>
