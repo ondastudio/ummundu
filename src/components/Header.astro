@@ -1,0 +1,43 @@
+---
+import { headerCopy } from '../content/copy/header';
+
+interface Props {
+  lang: 'pt' | 'en';
+  variant?: 'withMenu' | 'logoOnly';
+}
+
+const { lang, variant = 'withMenu' } = Astro.props;
+const { menuAriaLabel } = headerCopy[lang];
+---
+<header class="site-header">
+  <img src="/logo.svg" alt="Ummundu" class="site-header__logo" />
+  {variant === 'withMenu' && (
+    <a href="#menu" class="site-header__menu-link" data-menu-trigger aria-label={menuAriaLabel}>menu</a>
+  )}
+</header>
+
+<style>
+  .site-header {
+    height: var(--space-header-height);
+    background: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0 var(--space-page-padding);
+  }
+
+  .site-header__logo {
+    height: 16.92px;
+    width: 151.192px;
+  }
+
+  .site-header__menu-link {
+    position: absolute;
+    right: var(--space-page-padding);
+    font-size: var(--text-menu-size);
+    line-height: var(--text-menu-line);
+    letter-spacing: var(--text-menu-tracking);
+    text-transform: capitalize;
+  }
+</style>
