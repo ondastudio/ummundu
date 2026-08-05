@@ -17,66 +17,114 @@ const destinations = await getCollection('destinations');
 <Header lang={lang} variant="logoOnly" />
 <main class="home">
   <section class="home__hero">
-    <a href="#menu" class="home__menu-link" data-menu-trigger aria-label={t.menuAriaLabel}>menu</a>
+    <a href="#menu" class="home__menu-link" data-menu-trigger aria-label={t.menuAriaLabel}>Menu</a>
+    <a href="#menu" class="home__menu-link-pinned" data-menu-trigger aria-label={t.menuAriaLabel}>Menu</a>
     <h1 class="home__display">
       {t.heroLines.map((line) => <span>{line}</span>)}
     </h1>
+    <div class="home__divider"></div>
   </section>
-  <div class="home__divider"></div>
 
   <section class="home__section">
     <p class="home__label">{t.essenceLabel}</p>
-    <p class="home__body">{t.essenceBody}</p>
+    <div class="home__body-row">
+      <p class="home__body">{t.essenceBody}</p>
+    </div>
   </section>
 
   <section class="home__section">
     <p class="home__label">{t.approachLabel}</p>
-    <p class="home__body">{t.approachBody}</p>
+    <div class="home__body-row">
+      <p class="home__body">{t.approachBody}</p>
+    </div>
   </section>
 
   <section class="home__section">
     <p class="home__label">{t.accessLabel}</p>
-    <ul class="home__access-list">
-      {t.accessList.map((item) => <li>{item}</li>)}
-    </ul>
+    <div class="home__body-row">
+      <ul class="home__access-list">
+        {t.accessList.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
   </section>
 
   <section class="home__section">
     <p class="home__label">{t.destinationsLabel}</p>
-    <ul class="home__destination-list">
-      {destinations.map((entry) => (
-        <li>
-          <a href={lang === 'pt' ? `/${entry.id}` : `/en/${entry.id}`}>
-            {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
-          </a>
-          {' · '}
-          {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
-        </li>
-      ))}
-    </ul>
+    <div class="home__body-row">
+      <ul class="home__destination-list">
+        {destinations.map((entry) => (
+          <li>
+            <a href={lang === 'pt' ? `/${entry.id}` : `/en/${entry.id}`}>
+              {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
+            </a>
+            {' · '}
+            {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
+          </li>
+        ))}
+      </ul>
+    </div>
   </section>
 </main>
 <Footer lang={lang} currentRoute={currentRoute} />
 
 <style>
   .home {
-    width: var(--content-block-width);
-    margin: 0 auto;
-    padding-top: 30px;
+    width: 100%;
+    padding: 0 var(--space-page-padding);
   }
 
   .home__hero {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    height: 100vh;
     padding-top: 241px;
   }
 
-  .home__menu-link {
+  .home__menu-link,
+  .home__menu-link-pinned {
     font-size: var(--text-menu-size);
     line-height: var(--text-menu-line);
     letter-spacing: var(--text-menu-tracking);
-    text-transform: capitalize;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 200ms ease, visibility 0s linear 0s;
+  }
+
+  .home__menu-link {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-100%);
+  }
+
+  /* Fades out as it scrolls under the fixed header; visibility switch is
+     delayed until the fade finishes so it doesn't vanish mid-transition. */
+  .home__menu-link.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 200ms ease, visibility 0s linear 200ms;
+  }
+
+  .home__menu-link-pinned {
+    position: fixed;
+    top: calc(var(--space-header-height) / 2);
+    right: var(--space-page-padding);
+    transform: translateY(-50%);
+    z-index: 20;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 200ms ease, visibility 0s linear 200ms;
+  }
+
+  .home__menu-link-pinned.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 200ms ease, visibility 0s linear 0s;
   }
 
   .home__display {
@@ -86,7 +134,7 @@ const destinations = await getCollection('destinations');
     line-height: var(--text-display-line);
     letter-spacing: var(--text-display-tracking);
     text-transform: uppercase;
-    margin: 0;
+    margin: auto 0 0;
     align-self: flex-start;
   }
 
@@ -95,13 +143,23 @@ const destinations = await getCollection('destinations');
   }
 
   .home__divider {
+    width: 100%;
     height: 1px;
     background: var(--color-text-muted-20);
     margin: 30px 0;
   }
 
   .home__section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     margin-top: 199px;
+  }
+
+  .home__section:first-of-type {
+    /* .home__divider already contributes 30px via its own margin-bottom,
+       which doesn't collapse out of the flex hero — so 137 + 30 = 167px total. */
+    margin-top: 137px;
   }
 
   .home__label {
@@ -110,7 +168,14 @@ const destinations = await getCollection('destinations');
     letter-spacing: var(--text-label-tracking);
     text-transform: uppercase;
     color: var(--color-text-muted-70);
-    margin: 0 0 14px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .home__body-row {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
   }
 
   .home__body {
@@ -118,6 +183,7 @@ const destinations = await getCollection('destinations');
     line-height: var(--text-body-line);
     letter-spacing: var(--text-body-tracking);
     margin: 0;
+    max-width: var(--content-block-width);
   }
 
   .home__access-list,
@@ -125,6 +191,7 @@ const destinations = await getCollection('destinations');
     list-style: none;
     margin: 0;
     padding: 0;
+    max-width: var(--content-block-width);
     font-size: var(--text-body-size);
     line-height: var(--text-body-line);
     letter-spacing: var(--text-body-tracking);
@@ -138,3 +205,42 @@ const destinations = await getCollection('destinations');
     margin-bottom: 20px;
   }
 </style>
+
+<script>
+  function initHomeMenuPin() {
+    const heroLink = document.querySelector<HTMLElement>('.home__menu-link');
+    const pinnedLink = document.querySelector<HTMLElement>('.home__menu-link-pinned');
+    const hero = document.querySelector<HTMLElement>('.home__hero');
+    if (!heroLink || !pinnedLink || !hero) return;
+
+    const headerHeight = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--space-header-height')
+    );
+
+    // The hero link sits at the hero's own vertical center (see .home__menu-link
+    // CSS), so it reaches the header's bottom edge once scrollY passes heroCenter - headerHeight.
+    let pinThreshold = 0;
+
+    const measure = () => {
+      const heroRect = hero.getBoundingClientRect();
+      const heroCenterFromDocTop = heroRect.top + window.scrollY + heroRect.height / 2;
+      pinThreshold = heroCenterFromDocTop - headerHeight;
+    };
+
+    const update = () => {
+      const pinned = window.scrollY >= pinThreshold;
+      heroLink.classList.toggle('is-hidden', pinned);
+      pinnedLink.classList.toggle('is-visible', pinned);
+    };
+
+    measure();
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', () => {
+      measure();
+      update();
+    });
+  }
+
+  initHomeMenuPin();
+</script>
