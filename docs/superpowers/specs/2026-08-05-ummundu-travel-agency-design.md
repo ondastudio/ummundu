@@ -44,12 +44,12 @@ Algarve and Madeira are the same template (see Content Model) so adding a third 
 
 ## Navigation
 
-There is no visible header nav bar. The header contains only the logo and a "menu" trigger; all navigation lives in a two-state slide-over overlay.
+There is no visible header nav bar. The header contains only the logo and a "menu" trigger; all navigation lives in a two-state overlay panel.
 
-- **Header**: logo (left/center) + "menu" link (top-right), height 77px desktop / 54px mobile.
-- **Menu overlay — State 1** (opened from the header trigger): centered "Destinos" and "Contacto" links, language switcher ("Português · English") at the bottom, "Fechar" (close) top-right.
+- **Header**: logo (centered) + "menu" link (right-aligned), height 77px desktop / 54px mobile. On inner pages (Algarve, Madeira, Contacto, legal pages) the menu link lives inside this bar. On the **Home page specifically**, the header shows the logo only, and the "menu" trigger instead sits inside the hero content block (right-aligned, above the display title) rather than in the compact bar — a deliberate Home-page layout difference in the Figma file, not a general pattern.
+- **Overlay mechanics**: a full-viewport backdrop (`rgba(50,45,40,0.7)`) appears **instantly** behind a right-anchored panel (560px wide, full height, background `#E0D8CC`, horizontal padding 50px). The panel itself dissolves in/out over 150ms — the Figma annotations explicitly call out "no lateral slide-in," so this is opacity-only, not a translating drawer.
+- **Menu overlay — State 1** (opened from the "menu" trigger): centered "Destinos" and "Contacto" links, language switcher ("Português · English") at the bottom, "Fechar" (close) top-right.
 - **Menu overlay — State 2** (opened by clicking "Destinos" in State 1): left-aligned "destinos" eyebrow label above a destination list (`{title} · {country}` per destination, sourced from the same content collection as the destination pages), "Voltar" (back) link at the bottom in place of the language switcher.
-- Panel background `#E0D8CC`, horizontal padding 50px.
 
 ## Interactions & Motion
 
@@ -58,7 +58,8 @@ From the Figma "General notes" frame — these are the only transition rules in 
 | Interaction | Timing |
 |---|---|
 | Home intro → homepage | Dissolve, 250ms |
-| Menu open / close | Dissolve, 150ms |
+| Menu backdrop appearing/disappearing | Instant |
+| Menu panel open / close | Dissolve, 150ms (no lateral slide-in) |
 | Menu internal state change (State 1 ↔ State 2) | Dissolve, 150ms |
 | Between-page navigation | Instant (no transition) |
 
@@ -206,3 +207,4 @@ Design and architecture are settled; these are client-data gaps, not open design
 - Confirm the RNAVT travel-license number shown in the footer ("12785") is the client's real registration number
 - "Livro de reclamações" footer link — external link to the government complaints-book portal vs. a new internal page (client to decide)
 - WebHS FTP/cPanel credentials
+- Figma itself is inconsistent on the Madeira destination's English name: the Home page's destination list translates it to "Madeira Archipelago," but the Madeira page's own English title frame keeps the Portuguese "Arquipélago da Madeira." This spec uses "Madeira Archipelago" as the canonical `title_en` (the more complete English translation) — flag for client proofreading, not a build blocker.
