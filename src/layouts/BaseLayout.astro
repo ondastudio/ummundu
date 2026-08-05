@@ -1,5 +1,6 @@
 ---
 import '../styles/tokens.css';
+import MenuOverlay from '../components/MenuOverlay.astro';
 
 interface Props {
   lang: 'pt' | 'en';
@@ -16,5 +17,6 @@ const { lang, title } = Astro.props;
   </head>
   <body>
     <slot />
+    <MenuOverlay lang={lang} />
   </body>
 </html>

@@ -1,0 +1,205 @@
+---
+import { getCollection } from 'astro:content';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { menuOverlayCopy } from '../content/copy/menuOverlay';
+
+interface Props {
+  lang: 'pt' | 'en';
+}
+
+const { lang } = Astro.props;
+const destinations = await getCollection('destinations');
+const t = menuOverlayCopy[lang];
+const destinationHref = (id: string) => (lang === 'pt' ? `/${id}` : `/en/${id}`);
+---
+<div class="menu-overlay" data-menu-overlay data-state="closed">
+  <div class="menu-overlay__backdrop" data-menu-backdrop></div>
+  <div class="menu-overlay__panel" data-menu-panel>
+    <div class="menu-overlay__panel-top">
+      <a href="#close" class="menu-overlay__close" data-menu-close>{t.close}</a>
+    </div>
+
+    <div class="menu-overlay__state1" data-panel-state1>
+      <nav class="menu-overlay__nav">
+        <a href="#destinos" data-menu-destinos>{t.destinations}</a>
+        <a href={t.contactHref}>{t.contact}</a>
+      </nav>
+      <div class="menu-overlay__language">
+        <LanguageSwitcher lang={lang} context="menu" />
+      </div>
+    </div>
+
+    <div class="menu-overlay__state2" data-panel-state2>
+      <p class="menu-overlay__eyebrow">{t.destinationsLabel}</p>
+      <ul class="menu-overlay__destination-list">
+        {destinations.map((entry) => (
+          <li>
+            <a href={destinationHref(entry.id)}>
+              {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
+            </a>
+            {' · '}
+            {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
+          </li>
+        ))}
+      </ul>
+      <a href="#back" class="menu-overlay__back" data-menu-back>{t.back}</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: 200;
+  }
+
+  .menu-overlay[data-state='state1'],
+  .menu-overlay[data-state='state2'] {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .menu-overlay__backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--color-overlay-backdrop);
+  }
+
+  .menu-overlay__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--content-block-width);
+    background: var(--color-bg);
+    padding: 0 var(--space-page-padding) 28px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+
+  .menu-overlay[data-state='state1'] .menu-overlay__panel,
+  .menu-overlay[data-state='state2'] .menu-overlay__panel {
+    opacity: 1;
+  }
+
+  .menu-overlay__panel-top {
+    height: var(--space-header-height);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .menu-overlay__close,
+  .menu-overlay__back {
+    font-size: var(--text-menu-size);
+    line-height: var(--text-menu-line);
+    letter-spacing: var(--text-menu-tracking);
+    text-transform: capitalize;
+  }
+
+  .menu-overlay__state1,
+  .menu-overlay__state2 {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  .menu-overlay[data-state='state1'] .menu-overlay__state1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu-overlay[data-state='state2'] .menu-overlay__state2 {
+    display: flex;
+    padding-top: 127px;
+    gap: 69px;
+  }
+
+  .menu-overlay__nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    font-size: var(--text-menu-link-size);
+    line-height: var(--text-menu-link-line);
+    letter-spacing: var(--text-menu-link-tracking);
+    text-align: center;
+  }
+
+  .menu-overlay__language {
+    position: absolute;
+    bottom: 28px;
+  }
+
+  .menu-overlay__eyebrow {
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-line);
+    letter-spacing: var(--text-label-tracking);
+    text-transform: uppercase;
+    color: var(--color-text-muted-70);
+    margin: 0;
+  }
+
+  .menu-overlay__destination-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    letter-spacing: var(--text-body-tracking);
+  }
+
+  .menu-overlay__back {
+    margin-top: auto;
+  }
+</style>
+
+<script>
+  function initMenuOverlay() {
+    const overlay = document.querySelector<HTMLElement>('[data-menu-overlay]');
+    if (!overlay) return;
+
+    const setState = (state: 'closed' | 'state1' | 'state2') => {
+      overlay.dataset.state = state;
+    };
+
+    document.querySelectorAll('[data-menu-trigger]').forEach((trigger) => {
+      trigger.addEventListener('click', (event) => {
+        event.preventDefault();
+        setState('state1');
+      });
+    });
+
+    overlay.querySelectorAll('[data-menu-close]').forEach((button) => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        setState('closed');
+      });
+    });
+
+    overlay.querySelector('[data-menu-backdrop]')?.addEventListener('click', () => {
+      setState('closed');
+    });
+
+    overlay.querySelector('[data-menu-destinos]')?.addEventListener('click', (event) => {
+      event.preventDefault();
+      setState('state2');
+    });
+
+    overlay.querySelector('[data-menu-back]')?.addEventListener('click', (event) => {
+      event.preventDefault();
+      setState('state1');
+    });
+  }
+
+  initMenuOverlay();
+</script>
