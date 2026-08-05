@@ -4,23 +4,27 @@ import Header from '../Header.astro';
 import Footer from '../Footer.astro';
 import { contactCopy } from '../../content/copy/contact';
 import { getDepartureYears } from '../../lib/getDepartureYears';
+import { routes, type CurrentRoute } from '../../content/copy/routes';
 
 interface Props {
   lang: 'pt' | 'en';
+  currentRoute: CurrentRoute;
 }
 
-const { lang } = Astro.props;
+const { lang, currentRoute } = Astro.props;
 const t = contactCopy[lang];
 const destinations = await getCollection('destinations');
 const years = getDepartureYears(new Date().getFullYear(), 3);
+const privacyHref = routes.privacy[lang];
+const successRedirect = routes.contactSuccess[lang];
 ---
 <Header lang={lang} variant="withMenu" />
 <main class="contact">
   <p class="contact__label">{t.label}</p>
   <p class="contact__intro">{t.intro}</p>
 
-  <form class="contact__form" action="https://formspree.io/f/REPLACE_WITH_FORM_ID" method="POST">
-    <input type="hidden" name="_next" value={`https://REPLACE_WITH_DOMAIN${t.successRedirect}`} />
+  <form class="contact__form" action="https://formspree.io/f/REPLACE_WITH_FORM_ID" method="POST" novalidate data-contact-form>
+    <input type="hidden" name="_next" value={`https://REPLACE_WITH_DOMAIN${successRedirect}`} />
 
     <div class="contact__field">
       <label for={`departure-month-${lang}`}>{t.fields.departure}</label>
@@ -48,6 +52,7 @@ const years = getDepartureYears(new Date().getFullYear(), 3);
           </option>
         ))}
       </select>
+      <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
@@ -56,6 +61,7 @@ const years = getDepartureYears(new Date().getFullYear(), 3);
         <option value="" disabled selected></option>
         {t.durations.map((duration) => <option value={duration}>{duration}</option>)}
       </select>
+      <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
@@ -64,6 +70,7 @@ const years = getDepartureYears(new Date().getFullYear(), 3);
         <option value="" disabled selected></option>
         {t.travellerOptions.map((option) => <option value={option}>{option}</option>)}
       </select>
+      <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
@@ -72,21 +79,25 @@ const years = getDepartureYears(new Date().getFullYear(), 3);
         <option value="" disabled selected></option>
         {t.investmentOptions.map((option) => <option value={option}>{option}</option>)}
       </select>
+      <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
       <label for={`first-name-${lang}`}>{t.fields.firstName} <span class="contact__required">*</span></label>
       <input type="text" id={`first-name-${lang}`} name="first_name" required />
+      <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
       <label for={`last-name-${lang}`}>{t.fields.lastName} <span class="contact__required">*</span></label>
       <input type="text" id={`last-name-${lang}`} name="last_name" required />
+      <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
       <label for={`email-${lang}`}>{t.fields.email} <span class="contact__required">*</span></label>
       <input type="email" id={`email-${lang}`} name="email" required />
+      <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
@@ -101,13 +112,13 @@ const years = getDepartureYears(new Date().getFullYear(), 3);
 
     <p class="contact__required-note">{t.requiredNote}</p>
     <p class="contact__privacy-note">
-      {t.privacyPrefix}<a href={t.privacyLinkHref}>{t.privacyLinkLabel}</a>{t.privacySuffix}
+      {t.privacyPrefix}<a href={privacyHref}>{t.privacyLinkLabel}</a>{t.privacySuffix}
     </p>
 
     <button type="submit" class="contact__submit">{t.submit}</button>
   </form>
 </main>
-<Footer lang={lang} showContactLink={false} />
+<Footer lang={lang} showContactLink={false} currentRoute={currentRoute} />
 
 <style>
   .contact {
@@ -187,6 +198,14 @@ const years = getDepartureYears(new Date().getFullYear(), 3);
     margin: 0;
   }
 
+  .contact__error {
+    font-size: var(--text-form-meta-size);
+    line-height: var(--text-form-meta-line);
+    letter-spacing: var(--text-form-meta-tracking);
+    color: var(--color-error);
+    margin: 0;
+  }
+
   .contact__submit {
     align-self: center;
     font-family: var(--font-body);
@@ -200,3 +219,36 @@ const years = getDepartureYears(new Date().getFullYear(), 3);
     color: var(--color-text);
   }
 </style>
+
+<script>
+  function initContactForm() {
+    const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+    if (!form) return;
+
+    const requiredFields = Array.from(
+      form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('[required]')
+    );
+
+    form.addEventListener('submit', (event) => {
+      let firstInvalid: HTMLElement | null = null;
+
+      requiredFields.forEach((field) => {
+        const isValid = field.checkValidity();
+        const errorEl = field.closest('.contact__field')?.querySelector<HTMLElement>('[data-error]');
+        if (errorEl) {
+          errorEl.hidden = isValid;
+        }
+        if (!isValid && !firstInvalid) {
+          firstInvalid = field;
+        }
+      });
+
+      if (firstInvalid) {
+        event.preventDefault();
+        (firstInvalid as HTMLElement).focus();
+      }
+    });
+  }
+
+  initContactForm();
+</script>

@@ -27,10 +27,8 @@ export const contactCopy = {
     requiredNote: '(*) Informação necessária',
     privacyPrefix: 'Os seus dados pessoais serão tratados para responder ao pedido. Consulte a ',
     privacyLinkLabel: 'Declaração de Privacidade',
-    privacyLinkHref: '/privacidade',
     privacySuffix: ' para mais informações.',
     submit: 'Enviar',
-    successRedirect: '/contacto/obrigado',
   },
   en: {
     title: 'Ummundu — Contact',
@@ -60,9 +58,7 @@ export const contactCopy = {
     requiredNote: '(*) Required information',
     privacyPrefix: 'Your personal data will be processed to respond to the request. Consult the ',
     privacyLinkLabel: 'Privacy Statement',
-    privacyLinkHref: '/en/privacy',
     privacySuffix: ' for further information.',
     submit: 'Send',
-    successRedirect: '/en/contact/success',
   },
 };

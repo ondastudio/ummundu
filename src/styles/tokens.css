@@ -1,3 +1,35 @@
+@font-face {
+  font-family: 'Fahkwang';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/fahkwang-200.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/manrope-300.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/manrope-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/manrope-500.woff2') format('woff2');
+}
+
 :root {
   /* Colors (style guide docs) */
   --color-bg: #E0D8CC;

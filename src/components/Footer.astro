@@ -1,14 +1,17 @@
 ---
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import { footerCopy } from '../content/copy/footer';
+import { routes, type CurrentRoute } from '../content/copy/routes';
 
 interface Props {
   lang: 'pt' | 'en';
   showContactLink?: boolean;
+  currentRoute: CurrentRoute;
 }
 
-const { lang, showContactLink = true } = Astro.props;
-const { contact, contactHref, legalLinks, legalNote } = footerCopy[lang];
+const { lang, showContactLink = true, currentRoute } = Astro.props;
+const { contact, legalLinks, legalNote } = footerCopy[lang];
+const contactHref = routes.contact[lang];
 ---
 <footer class="site-footer" data-has-contact-link={showContactLink}>
   {showContactLink && (
@@ -20,7 +23,7 @@ const { contact, contactHref, legalLinks, legalNote } = footerCopy[lang];
         <a href={link.href}>{link.label}</a>
       ))}
     </div>
-    <LanguageSwitcher lang={lang} context="footer" />
+    <LanguageSwitcher lang={lang} context="footer" currentRoute={currentRoute} />
   </div>
   <div class="site-footer__note">
     <p>{legalNote}</p>

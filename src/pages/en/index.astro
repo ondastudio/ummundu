@@ -4,7 +4,7 @@ import Loader from '../../components/Loader.astro';
 import HomeContent from '../../components/pages/HomeContent.astro';
 import { homeCopy } from '../../content/copy/home';
 ---
-<BaseLayout lang="en" title={homeCopy.en.title}>
+<BaseLayout lang="en" title={homeCopy.en.title} currentRoute="home">
   <Loader />
-  <HomeContent lang="en" />
+  <HomeContent lang="en" currentRoute="home" />
 </BaseLayout>

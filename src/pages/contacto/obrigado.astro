@@ -3,6 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContactSuccessContent from '../../components/pages/ContactSuccessContent.astro';
 import { contactSuccessCopy } from '../../content/copy/contactSuccess';
 ---
-<BaseLayout lang="pt" title={contactSuccessCopy.pt.title}>
-  <ContactSuccessContent lang="pt" />
+<BaseLayout lang="pt" title={contactSuccessCopy.pt.title} currentRoute="contactSuccess">
+  <ContactSuccessContent lang="pt" currentRoute="contactSuccess" />
 </BaseLayout>

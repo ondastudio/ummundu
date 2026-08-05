@@ -3,12 +3,14 @@ import { getCollection } from 'astro:content';
 import Header from '../Header.astro';
 import Footer from '../Footer.astro';
 import { homeCopy } from '../../content/copy/home';
+import type { CurrentRoute } from '../../content/copy/routes';
 
 interface Props {
   lang: 'pt' | 'en';
+  currentRoute: CurrentRoute;
 }
 
-const { lang } = Astro.props;
+const { lang, currentRoute } = Astro.props;
 const t = homeCopy[lang];
 const destinations = await getCollection('destinations');
 ---
@@ -54,7 +56,7 @@ const destinations = await getCollection('destinations');
     </ul>
   </section>
 </main>
-<Footer lang={lang} />
+<Footer lang={lang} currentRoute={currentRoute} />
 
 <style>
   .home {

@@ -2,12 +2,14 @@
 import Header from '../Header.astro';
 import Footer from '../Footer.astro';
 import { contactSuccessCopy } from '../../content/copy/contactSuccess';
+import type { CurrentRoute } from '../../content/copy/routes';
 
 interface Props {
   lang: 'pt' | 'en';
+  currentRoute: CurrentRoute;
 }
 
-const { lang } = Astro.props;
+const { lang, currentRoute } = Astro.props;
 const { label, message } = contactSuccessCopy[lang];
 ---
 <Header lang={lang} variant="withMenu" />
@@ -15,7 +17,7 @@ const { label, message } = contactSuccessCopy[lang];
   <p class="contact-success__label">{label}</p>
   <p class="contact-success__message">{message}</p>
 </main>
-<Footer lang={lang} showContactLink={false} />
+<Footer lang={lang} showContactLink={false} currentRoute={currentRoute} />
 
 <style>
   .contact-success {

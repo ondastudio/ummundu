@@ -1,7 +1,6 @@
 export const footerCopy = {
   pt: {
     contact: 'Contacto',
-    contactHref: '/contacto',
     legalLinks: [
       { label: 'Termos de uso', href: '/termos-de-uso' },
       { label: 'Privacidade', href: '/privacidade' },
@@ -13,7 +12,6 @@ export const footerCopy = {
   },
   en: {
     contact: 'Contact',
-    contactHref: '/en/contact',
     legalLinks: [
       { label: 'Terms of use', href: '/en/terms-of-use' },
       { label: 'Privacy', href: '/en/privacy' },

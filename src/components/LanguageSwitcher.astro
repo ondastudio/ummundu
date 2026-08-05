@@ -1,14 +1,15 @@
 ---
-import { getAlternateLocalePath } from '../lib/getAlternateLocalePath';
+import { getAlternateRoutePath, type CurrentRoute } from '../content/copy/routes';
 import { languageSwitcherCopy } from '../content/copy/languageSwitcher';
 
 interface Props {
   lang: 'pt' | 'en';
   context: 'footer' | 'menu';
+  currentRoute: CurrentRoute;
 }
 
-const { lang, context } = Astro.props;
-const alternatePath = getAlternateLocalePath(Astro.url.pathname, lang);
+const { lang, context, currentRoute } = Astro.props;
+const alternatePath = getAlternateRoutePath(currentRoute, lang);
 const { current, alternate } = languageSwitcherCopy[lang];
 ---
 <div class="language-switcher" data-context={context}>

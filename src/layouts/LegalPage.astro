@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import type { CurrentRoute } from '../content/copy/routes';
 
 interface Section {
   title: string;
@@ -10,15 +11,16 @@ interface Section {
 
 interface Props {
   lang: 'pt' | 'en';
+  currentRoute: CurrentRoute;
   label: string;
   title: string;
   intro: string;
   sections: Section[];
 }
 
-const { lang, label, title, intro, sections } = Astro.props;
+const { lang, currentRoute, label, title, intro, sections } = Astro.props;
 ---
-<BaseLayout lang={lang} title={`Ummundu — ${title}`}>
+<BaseLayout lang={lang} title={`Ummundu — ${title}`} currentRoute={currentRoute}>
   <Header lang={lang} variant="withMenu" />
   <main class="legal">
     <p class="legal__label">{label}</p>
@@ -33,7 +35,7 @@ const { lang, label, title, intro, sections } = Astro.props;
       ))}
     </div>
   </main>
-  <Footer lang={lang} />
+  <Footer lang={lang} currentRoute={currentRoute} />
 </BaseLayout>
 
 <style>

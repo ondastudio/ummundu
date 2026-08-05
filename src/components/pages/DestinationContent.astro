@@ -4,6 +4,7 @@ import Header from '../Header.astro';
 import Footer from '../Footer.astro';
 import { splitBilingualBody } from '../../lib/splitBilingualBody';
 import type { CollectionEntry } from 'astro:content';
+import type { CurrentRoute } from '../../content/copy/routes';
 
 interface Props {
   entry: CollectionEntry<'destinations'>;
@@ -16,6 +17,7 @@ const sections = splitBilingualBody(body ?? '');
 const bodyHtml = marked.parse(sections[lang]) as string;
 const title = lang === 'pt' ? data.title_pt : data.title_en;
 const country = lang === 'pt' ? data.country_pt : data.country_en;
+const currentRoute: CurrentRoute = { destinationId: entry.id };
 ---
 <Header lang={lang} variant="withMenu" />
 <main class="destination-page">
@@ -23,7 +25,7 @@ const country = lang === 'pt' ? data.country_pt : data.country_en;
   <h1 class="destination-page__title">{title}</h1>
   <div class="destination-page__body" set:html={bodyHtml} />
 </main>
-<Footer lang={lang} />
+<Footer lang={lang} currentRoute={currentRoute} />
 
 <style>
   .destination-page {

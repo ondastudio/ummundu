@@ -2,14 +2,17 @@
 import { getCollection } from 'astro:content';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import { menuOverlayCopy } from '../content/copy/menuOverlay';
+import { routes, type CurrentRoute } from '../content/copy/routes';
 
 interface Props {
   lang: 'pt' | 'en';
+  currentRoute: CurrentRoute;
 }
 
-const { lang } = Astro.props;
+const { lang, currentRoute } = Astro.props;
 const destinations = await getCollection('destinations');
 const t = menuOverlayCopy[lang];
+const contactHref = routes.contact[lang];
 const destinationHref = (id: string) => (lang === 'pt' ? `/${id}` : `/en/${id}`);
 ---
 <div class="menu-overlay" data-menu-overlay data-state="closed">
@@ -19,30 +22,32 @@ const destinationHref = (id: string) => (lang === 'pt' ? `/${id}` : `/en/${id}`)
       <a href="#close" class="menu-overlay__close" data-menu-close>{t.close}</a>
     </div>
 
-    <div class="menu-overlay__state1" data-panel-state1>
-      <nav class="menu-overlay__nav">
-        <a href="#destinos" data-menu-destinos>{t.destinations}</a>
-        <a href={t.contactHref}>{t.contact}</a>
-      </nav>
-      <div class="menu-overlay__language">
-        <LanguageSwitcher lang={lang} context="menu" />
+    <div class="menu-overlay__states">
+      <div class="menu-overlay__state1" data-panel-state1>
+        <nav class="menu-overlay__nav">
+          <a href="#destinos" data-menu-destinos>{t.destinations}</a>
+          <a href={contactHref}>{t.contact}</a>
+        </nav>
+        <div class="menu-overlay__language">
+          <LanguageSwitcher lang={lang} context="menu" currentRoute={currentRoute} />
+        </div>
       </div>
-    </div>
 
-    <div class="menu-overlay__state2" data-panel-state2>
-      <p class="menu-overlay__eyebrow">{t.destinationsLabel}</p>
-      <ul class="menu-overlay__destination-list">
-        {destinations.map((entry) => (
-          <li>
-            <a href={destinationHref(entry.id)}>
-              {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
-            </a>
-            {' · '}
-            {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
-          </li>
-        ))}
-      </ul>
-      <a href="#back" class="menu-overlay__back" data-menu-back>{t.back}</a>
+      <div class="menu-overlay__state2" data-panel-state2>
+        <p class="menu-overlay__eyebrow">{t.destinationsLabel}</p>
+        <ul class="menu-overlay__destination-list">
+          {destinations.map((entry) => (
+            <li>
+              <a href={destinationHref(entry.id)}>
+                {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
+              </a>
+              {' · '}
+              {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
+            </li>
+          ))}
+        </ul>
+        <a href="#back" class="menu-overlay__back" data-menu-back>{t.back}</a>
+      </div>
     </div>
   </div>
 </div>
@@ -54,12 +59,16 @@ const destinationHref = (id: string) => (lang === 'pt' ? `/${id}` : `/en/${id}`)
     visibility: hidden;
     pointer-events: none;
     z-index: 200;
+    /* Stay visible for the 150ms opacity fade-out to play before
+       vanishing; open instantly (see the override below). */
+    transition: visibility 0s linear 150ms;
   }
 
   .menu-overlay[data-state='state1'],
   .menu-overlay[data-state='state2'] {
     visibility: visible;
     pointer-events: auto;
+    transition: visibility 0s linear 0s;
   }
 
   .menu-overlay__backdrop {
@@ -102,23 +111,39 @@ const destinationHref = (id: string) => (lang === 'pt' ? `/${id}` : `/en/${id}`)
     text-transform: capitalize;
   }
 
-  .menu-overlay__state1,
-  .menu-overlay__state2 {
-    display: none;
+  /* Positioned wrapper so state1/state2 can stack on top of each other and
+     crossfade without a layout jump (see the two rules below). */
+  .menu-overlay__states {
+    position: relative;
     flex: 1;
-    flex-direction: column;
   }
 
-  .menu-overlay[data-state='state1'] .menu-overlay__state1 {
+  .menu-overlay__state1,
+  .menu-overlay__state2 {
+    position: absolute;
+    inset: 0;
     display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 150ms ease, visibility 0s linear 150ms;
+  }
+
+  .menu-overlay__state1 {
     align-items: center;
     justify-content: center;
   }
 
-  .menu-overlay[data-state='state2'] .menu-overlay__state2 {
-    display: flex;
+  .menu-overlay__state2 {
     padding-top: 127px;
     gap: 69px;
+  }
+
+  .menu-overlay[data-state='state1'] .menu-overlay__state1,
+  .menu-overlay[data-state='state2'] .menu-overlay__state2 {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 150ms ease, visibility 0s linear 0s;
   }
 
   .menu-overlay__nav {
@@ -134,7 +159,11 @@ const destinationHref = (id: string) => (lang === 'pt' ? `/${id}` : `/en/${id}`)
 
   .menu-overlay__language {
     position: absolute;
-    bottom: 28px;
+    /* 0, not 28px: the containing block is now .menu-overlay__state1, whose
+       box already stops at the panel's content edge (the panel's own 28px
+       bottom padding is outside this box), so no extra offset is needed to
+       land in the same visual spot as before. */
+    bottom: 0;
   }
 
   .menu-overlay__eyebrow {
