@@ -1,0 +1,46 @@
+---
+import { getAlternateLocalePath } from '../lib/getAlternateLocalePath';
+import { languageSwitcherCopy } from '../content/copy/languageSwitcher';
+
+interface Props {
+  lang: 'pt' | 'en';
+  context: 'footer' | 'menu';
+}
+
+const { lang, context } = Astro.props;
+const alternatePath = getAlternateLocalePath(Astro.url.pathname, lang);
+const { current, alternate } = languageSwitcherCopy[lang];
+---
+<div class="language-switcher" data-context={context}>
+  <span class="language-switcher__current">{current}</span>
+  <span class="language-switcher__separator">·</span>
+  <a href={alternatePath} class="language-switcher__alternate">{alternate}</a>
+</div>
+
+<style>
+  .language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+  }
+
+  .language-switcher__current {
+    color: var(--color-text);
+  }
+
+  .language-switcher__alternate {
+    color: var(--color-text-muted-70);
+  }
+
+  .language-switcher[data-context='footer'] {
+    font-size: var(--text-footer-legal-size);
+    line-height: var(--text-footer-legal-line);
+  }
+
+  .language-switcher[data-context='menu'] {
+    font-size: 12px;
+    line-height: 24px;
+    letter-spacing: 0.03em;
+  }
+</style>
