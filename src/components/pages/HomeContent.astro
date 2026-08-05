@@ -1,0 +1,138 @@
+---
+import { getCollection } from 'astro:content';
+import Header from '../Header.astro';
+import Footer from '../Footer.astro';
+import { homeCopy } from '../../content/copy/home';
+
+interface Props {
+  lang: 'pt' | 'en';
+}
+
+const { lang } = Astro.props;
+const t = homeCopy[lang];
+const destinations = await getCollection('destinations');
+---
+<Header lang={lang} variant="logoOnly" />
+<main class="home">
+  <section class="home__hero">
+    <a href="#menu" class="home__menu-link" data-menu-trigger aria-label={t.menuAriaLabel}>menu</a>
+    <h1 class="home__display">
+      {t.heroLines.map((line) => <span>{line}</span>)}
+    </h1>
+  </section>
+  <div class="home__divider"></div>
+
+  <section class="home__section">
+    <p class="home__label">{t.essenceLabel}</p>
+    <p class="home__body">{t.essenceBody}</p>
+  </section>
+
+  <section class="home__section">
+    <p class="home__label">{t.approachLabel}</p>
+    <p class="home__body">{t.approachBody}</p>
+  </section>
+
+  <section class="home__section">
+    <p class="home__label">{t.accessLabel}</p>
+    <ul class="home__access-list">
+      {t.accessList.map((item) => <li>{item}</li>)}
+    </ul>
+  </section>
+
+  <section class="home__section">
+    <p class="home__label">{t.destinationsLabel}</p>
+    <ul class="home__destination-list">
+      {destinations.map((entry) => (
+        <li>
+          <a href={lang === 'pt' ? `/${entry.id}` : `/en/${entry.id}`}>
+            {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
+          </a>
+          {' · '}
+          {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
+        </li>
+      ))}
+    </ul>
+  </section>
+</main>
+<Footer lang={lang} />
+
+<style>
+  .home {
+    width: var(--content-block-width);
+    margin: 0 auto;
+    padding-top: 30px;
+  }
+
+  .home__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-top: 241px;
+  }
+
+  .home__menu-link {
+    font-size: var(--text-menu-size);
+    line-height: var(--text-menu-line);
+    letter-spacing: var(--text-menu-tracking);
+    text-transform: capitalize;
+  }
+
+  .home__display {
+    font-family: var(--font-display);
+    font-weight: 200;
+    font-size: var(--text-display-size);
+    line-height: var(--text-display-line);
+    letter-spacing: var(--text-display-tracking);
+    text-transform: uppercase;
+    margin: 0;
+    align-self: flex-start;
+  }
+
+  .home__display span {
+    display: block;
+  }
+
+  .home__divider {
+    height: 1px;
+    background: var(--color-text-muted-20);
+    margin: 30px 0;
+  }
+
+  .home__section {
+    margin-top: 199px;
+  }
+
+  .home__label {
+    font-size: var(--text-label-size);
+    line-height: var(--text-label-line);
+    letter-spacing: var(--text-label-tracking);
+    text-transform: uppercase;
+    color: var(--color-text-muted-70);
+    margin: 0 0 14px;
+  }
+
+  .home__body {
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    letter-spacing: var(--text-body-tracking);
+    margin: 0;
+  }
+
+  .home__access-list,
+  .home__destination-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--text-body-size);
+    line-height: var(--text-body-line);
+    letter-spacing: var(--text-body-tracking);
+  }
+
+  .home__access-list li {
+    margin-bottom: 9px;
+  }
+
+  .home__destination-list li {
+    margin-bottom: 20px;
+  }
+</style>

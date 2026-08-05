@@ -1,0 +1,39 @@
+---
+---
+<div class="loader" id="loader">
+  <img src="/logo.svg" alt="Ummundu" class="loader__logo" />
+</div>
+
+<style>
+  .loader {
+    position: fixed;
+    inset: 0;
+    background: var(--color-intro-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+    opacity: 1;
+    transition: opacity 250ms ease;
+  }
+
+  .loader.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .loader__logo {
+    width: 151.192px;
+    filter: brightness(0) saturate(100%) invert(88%) sepia(8%) saturate(508%) hue-rotate(346deg) brightness(97%) contrast(90%);
+  }
+</style>
+
+<script>
+  window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    if (!loader) return;
+    requestAnimationFrame(() => {
+      loader.classList.add('is-hidden');
+    });
+  });
+</script>

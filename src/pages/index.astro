@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Loader from '../components/Loader.astro';
+import HomeContent from '../components/pages/HomeContent.astro';
+import { homeCopy } from '../content/copy/home';
 ---
-<BaseLayout lang="pt" title="Ummundu">
-  <h1>Ummundu</h1>
+<BaseLayout lang="pt" title={homeCopy.pt.title}>
+  <Loader />
+  <HomeContent lang="pt" />
 </BaseLayout>
