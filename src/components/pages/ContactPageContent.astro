@@ -21,92 +21,208 @@ const successRedirect = routes.contactSuccess[lang];
 <Header lang={lang} variant="withMenu" />
 <main class="contact">
   <p class="contact__label">{t.label}</p>
+
+  <div class="contact__content">
   <p class="contact__intro">{t.intro}</p>
 
   <form class="contact__form" action="https://formspree.io/f/REPLACE_WITH_FORM_ID" method="POST" novalidate data-contact-form>
     <input type="hidden" name="_next" value={`https://REPLACE_WITH_DOMAIN${successRedirect}`} />
 
     <div class="contact__field">
-      <label for={`departure-month-${lang}`}>{t.fields.departure}</label>
-      <div class="contact__field-group">
-        <select id={`departure-month-${lang}`} name="departure_month">
-          <option value="" disabled selected>{t.fields.month}</option>
-          {t.months.map((month) => <option value={month}>{month}</option>)}
-        </select>
-        <select id={`departure-year-${lang}`} name="departure_year">
-          <option value="" disabled selected>{t.fields.year}</option>
-          {years.map((year) => <option value={year}>{year}</option>)}
-        </select>
+      <div class="contact__row">
+        <label class="contact__field-label" for={`departure-month-${lang}`}>{t.fields.departure}</label>
+        <div class="contact__field-group">
+          <div class="dropdown">
+            <button
+              type="button"
+              id={`departure-month-${lang}`}
+              class="dropdown__trigger"
+              data-dropdown-trigger="departure_month"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls={`departure-month-panel-${lang}`}
+            >
+              <span class="dropdown__value" data-dropdown-value>{t.fields.month}</span>
+              <span class="dropdown__chevron"><svg class="dropdown__chevron-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+              </svg></span>
+            </button>
+          </div>
+          <div class="dropdown">
+            <button
+              type="button"
+              id={`departure-year-${lang}`}
+              class="dropdown__trigger"
+              data-dropdown-trigger="departure_year"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls={`departure-year-panel-${lang}`}
+            >
+              <span class="dropdown__value" data-dropdown-value>{t.fields.year}</span>
+              <span class="dropdown__chevron"><svg class="dropdown__chevron-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+              </svg></span>
+            </button>
+          </div>
+        </div>
       </div>
+      <ul class="dropdown__panel" id={`departure-month-panel-${lang}`} data-dropdown-panel="departure_month" role="listbox" hidden>
+        {t.months.map((month) => <li role="option" data-value={month} tabindex="-1">{month}</li>)}
+      </ul>
+      <ul class="dropdown__panel" id={`departure-year-panel-${lang}`} data-dropdown-panel="departure_year" role="listbox" hidden>
+        {years.map((year) => <li role="option" data-value={String(year)} tabindex="-1">{year}</li>)}
+      </ul>
+      <input type="hidden" name="departure_month" data-dropdown-input="departure_month" />
+      <input type="hidden" name="departure_year" data-dropdown-input="departure_year" />
     </div>
 
     <div class="contact__field">
-      <label for={`destination-${lang}`}>{t.fields.destination} <span class="contact__required">*</span></label>
-      <select id={`destination-${lang}`} name="destination" required>
-        <option value="" disabled selected></option>
+      <div class="contact__row">
+        <label class="contact__field-label" for={`destination-${lang}`}>{t.fields.destination} <span class="contact__required">*</span></label>
+        <div class="dropdown dropdown--full">
+          <button
+            type="button"
+            id={`destination-${lang}`}
+            class="dropdown__trigger"
+            data-dropdown-trigger="destination"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls={`destination-panel-${lang}`}
+          >
+            <span class="dropdown__value" data-dropdown-value></span>
+            <span class="dropdown__chevron"><svg class="dropdown__chevron-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+              </svg></span>
+          </button>
+        </div>
+      </div>
+      <ul class="dropdown__panel" id={`destination-panel-${lang}`} data-dropdown-panel="destination" role="listbox" hidden>
         {destinations.map((entry) => (
-          <option value={entry.id}>
+          <li role="option" data-value={entry.id} tabindex="-1">
             {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
             {' · '}
             {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
-          </option>
+          </li>
         ))}
-      </select>
+      </ul>
+      <input type="hidden" name="destination" data-dropdown-input="destination" data-required />
       <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
-      <label for={`duration-${lang}`}>{t.fields.duration} <span class="contact__required">*</span></label>
-      <select id={`duration-${lang}`} name="duration" required>
-        <option value="" disabled selected></option>
-        {t.durations.map((duration) => <option value={duration}>{duration}</option>)}
-      </select>
+      <div class="contact__row">
+        <label class="contact__field-label" for={`duration-${lang}`}>{t.fields.duration} <span class="contact__required">*</span></label>
+        <div class="dropdown dropdown--full">
+          <button
+            type="button"
+            id={`duration-${lang}`}
+            class="dropdown__trigger"
+            data-dropdown-trigger="duration"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls={`duration-panel-${lang}`}
+          >
+            <span class="dropdown__value" data-dropdown-value></span>
+            <span class="dropdown__chevron"><svg class="dropdown__chevron-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+              </svg></span>
+          </button>
+        </div>
+      </div>
+      <ul class="dropdown__panel" id={`duration-panel-${lang}`} data-dropdown-panel="duration" role="listbox" hidden>
+        {t.durations.map((duration) => <li role="option" data-value={duration} tabindex="-1">{duration}</li>)}
+      </ul>
+      <input type="hidden" name="duration" data-dropdown-input="duration" data-required />
       <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
-      <label for={`travellers-${lang}`}>{t.fields.travellers} <span class="contact__required">*</span></label>
-      <select id={`travellers-${lang}`} name="travellers" required>
-        <option value="" disabled selected></option>
-        {t.travellerOptions.map((option) => <option value={option}>{option}</option>)}
-      </select>
+      <div class="contact__row">
+        <label class="contact__field-label" for={`travellers-${lang}`}>{t.fields.travellers} <span class="contact__required">*</span></label>
+        <div class="dropdown dropdown--full">
+          <button
+            type="button"
+            id={`travellers-${lang}`}
+            class="dropdown__trigger"
+            data-dropdown-trigger="travellers"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls={`travellers-panel-${lang}`}
+          >
+            <span class="dropdown__value" data-dropdown-value></span>
+            <span class="dropdown__chevron"><svg class="dropdown__chevron-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+              </svg></span>
+          </button>
+        </div>
+      </div>
+      <ul class="dropdown__panel" id={`travellers-panel-${lang}`} data-dropdown-panel="travellers" role="listbox" hidden>
+        {t.travellerOptions.map((option) => <li role="option" data-value={option} tabindex="-1">{option}</li>)}
+      </ul>
+      <input type="hidden" name="travellers" data-dropdown-input="travellers" data-required />
       <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
-      <label for={`investment-${lang}`}>{t.fields.investment} <span class="contact__required">*</span></label>
-      <select id={`investment-${lang}`} name="investment" required>
-        <option value="" disabled selected></option>
-        {t.investmentOptions.map((option) => <option value={option}>{option}</option>)}
-      </select>
+      <div class="contact__row">
+        <label class="contact__field-label" for={`investment-${lang}`}>{t.fields.investment} <span class="contact__required">*</span></label>
+        <div class="dropdown dropdown--full">
+          <button
+            type="button"
+            id={`investment-${lang}`}
+            class="dropdown__trigger"
+            data-dropdown-trigger="investment"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls={`investment-panel-${lang}`}
+          >
+            <span class="dropdown__value" data-dropdown-value></span>
+            <span class="dropdown__chevron"><svg class="dropdown__chevron-icon" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+              </svg></span>
+          </button>
+        </div>
+      </div>
+      <ul class="dropdown__panel" id={`investment-panel-${lang}`} data-dropdown-panel="investment" role="listbox" hidden>
+        {t.investmentOptions.map((option) => <li role="option" data-value={option} tabindex="-1">{option}</li>)}
+      </ul>
+      <input type="hidden" name="investment" data-dropdown-input="investment" data-required />
       <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
-      <label for={`first-name-${lang}`}>{t.fields.firstName} <span class="contact__required">*</span></label>
-      <input type="text" id={`first-name-${lang}`} name="first_name" required />
+      <div class="contact__row">
+        <label class="contact__field-label" for={`first-name-${lang}`}>{t.fields.firstName} <span class="contact__required">*</span></label>
+        <input type="text" id={`first-name-${lang}`} name="first_name" required />
+      </div>
       <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
-      <label for={`last-name-${lang}`}>{t.fields.lastName} <span class="contact__required">*</span></label>
-      <input type="text" id={`last-name-${lang}`} name="last_name" required />
+      <div class="contact__row">
+        <label class="contact__field-label" for={`last-name-${lang}`}>{t.fields.lastName} <span class="contact__required">*</span></label>
+        <input type="text" id={`last-name-${lang}`} name="last_name" required />
+      </div>
       <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
-      <label for={`email-${lang}`}>{t.fields.email} <span class="contact__required">*</span></label>
-      <input type="email" id={`email-${lang}`} name="email" required />
+      <div class="contact__row">
+        <label class="contact__field-label" for={`email-${lang}`}>{t.fields.email} <span class="contact__required">*</span></label>
+        <input type="email" id={`email-${lang}`} name="email" required />
+      </div>
       <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
     <div class="contact__field">
-      <label for={`phone-${lang}`}>{t.fields.phone}</label>
-      <input type="tel" id={`phone-${lang}`} name="phone" />
+      <div class="contact__row">
+        <label class="contact__field-label" for={`phone-${lang}`}>{t.fields.phone}</label>
+        <input type="tel" id={`phone-${lang}`} name="phone" />
+      </div>
     </div>
 
     <div class="contact__field contact__field--message">
-      <label for={`message-${lang}`}>{t.fields.message}</label>
+      <label class="contact__field-label" for={`message-${lang}`}>{t.fields.message}</label>
       <textarea id={`message-${lang}`} name="message"></textarea>
     </div>
 
@@ -117,23 +233,33 @@ const successRedirect = routes.contactSuccess[lang];
 
     <button type="submit" class="contact__submit">{t.submit}</button>
   </form>
+  </div>
 </main>
-<Footer lang={lang} showContactLink={false} currentRoute={currentRoute} />
+<Footer lang={lang} showContactLink={false} currentRoute={currentRoute} style="--site-footer-margin-top: 0" />
 
 <style>
   .contact {
-    width: var(--content-block-width);
-    margin: 0 auto;
-    padding-top: 244px;
+    width: 100%;
+    margin-bottom: 152px;
   }
 
   .contact__label {
+    position: fixed;
+    top: 244px;
+    left: var(--space-page-padding);
+    z-index: 5;
     font-size: var(--text-label-size);
     line-height: var(--text-label-line);
     letter-spacing: var(--text-label-tracking);
     text-transform: uppercase;
     color: var(--color-text-muted-70);
-    margin: 0 0 14px;
+    margin: 0;
+  }
+
+  .contact__content {
+    width: var(--content-block-width);
+    margin-left: auto;
+    padding-top: calc(244px + var(--text-label-line));
   }
 
   .contact__intro {
@@ -144,12 +270,14 @@ const successRedirect = routes.contactSuccess[lang];
   }
 
   .contact__form {
+    width: var(--content-block-width);
     display: flex;
     flex-direction: column;
     gap: 35px;
   }
 
   .contact__field {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -157,33 +285,62 @@ const successRedirect = routes.contactSuccess[lang];
     padding-bottom: 4px;
   }
 
-  .contact__field label {
+  .contact__field--message {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .contact__row {
+    display: flex;
+    align-items: center;
+    gap: 37px;
+    width: 100%;
+  }
+
+  .contact__field-label {
+    flex-shrink: 0;
     font-size: var(--text-form-label-size);
     line-height: var(--text-form-label-line);
     letter-spacing: var(--text-form-label-tracking);
+    white-space: nowrap;
   }
 
-  .contact__field select,
-  .contact__field input,
-  .contact__field textarea {
+  .contact__field input {
+    flex: 1 1 0%;
+    min-width: 0;
     font-family: var(--font-body);
     font-size: var(--text-form-label-size);
     border: none;
     background: transparent;
-    color: var(--color-text);
+    color: var(--color-text-muted-70);
     padding: 0;
+    outline: none;
+  }
+
+  .contact__field textarea {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: var(--text-form-label-size);
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted-70);
+    padding: 0;
+    outline: none;
   }
 
   .contact__field-group {
     display: flex;
+    flex: 1 1 0%;
+    align-items: center;
     gap: 37px;
+    min-width: 0;
   }
 
   .contact__field--message textarea {
     border: 1px solid var(--color-text-muted-20);
     padding: 6px 10px;
     height: 92px;
-    resize: vertical;
+    resize: none;
   }
 
   .contact__required {
@@ -218,28 +375,254 @@ const successRedirect = routes.contactSuccess[lang];
     cursor: pointer;
     color: var(--color-text);
   }
+
+  /* Dropdown */
+
+  .dropdown {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  .dropdown--full {
+    width: 100%;
+  }
+
+  .dropdown__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: var(--text-form-label-size);
+    line-height: var(--text-form-label-line);
+    letter-spacing: var(--text-form-label-tracking);
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--color-text-muted-50);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .dropdown__trigger[data-has-value] {
+    color: var(--color-text-muted-70);
+  }
+
+  .dropdown__value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dropdown__chevron {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    color: var(--color-text-muted-70);
+  }
+
+  .dropdown__chevron-icon {
+    transition: transform 150ms ease;
+  }
+
+  .dropdown__trigger[aria-expanded='true'] .dropdown__chevron-icon {
+    transform: rotate(180deg);
+  }
+
+  .dropdown__panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 15;
+    width: 100%;
+    max-height: 320px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--color-bg);
+    border: 1px solid var(--color-text-muted-40);
+  }
+
+  .dropdown__panel[hidden] {
+    display: none;
+  }
+
+  .dropdown__panel li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 10px;
+    font-family: var(--font-body);
+    font-size: var(--text-form-label-size);
+    line-height: var(--text-form-label-line);
+    letter-spacing: var(--text-form-label-tracking);
+    color: var(--color-text-muted-70);
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .dropdown__panel li:hover,
+  .dropdown__panel li:focus-visible,
+  .dropdown__panel li[aria-selected='true'] {
+    background: var(--color-text-muted-20);
+    outline: none;
+  }
 </style>
 
 <script>
+  function initDropdowns() {
+    const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+    if (!form) return;
+
+    const triggers = Array.from(form.querySelectorAll<HTMLButtonElement>('[data-dropdown-trigger]'));
+
+    function getParts(trigger: HTMLButtonElement) {
+      const key = trigger.dataset.dropdownTrigger as string;
+      const field = trigger.closest('.contact__field') as HTMLElement;
+      const panel = field.querySelector<HTMLElement>(`[data-dropdown-panel="${key}"]`)!;
+      const input = field.querySelector<HTMLInputElement>(`[data-dropdown-input="${key}"]`)!;
+      const valueEl = trigger.querySelector<HTMLElement>('[data-dropdown-value]')!;
+      return { field, panel, input, valueEl };
+    }
+
+    function clearFieldError(field: HTMLElement) {
+      const errorEl = field.querySelector<HTMLElement>('[data-error]');
+      if (errorEl) errorEl.hidden = true;
+    }
+
+    function closeDropdown(trigger: HTMLButtonElement) {
+      const { panel } = getParts(trigger);
+      trigger.setAttribute('aria-expanded', 'false');
+      panel.hidden = true;
+    }
+
+    function closeAll(except?: HTMLButtonElement) {
+      triggers.forEach((t) => {
+        if (t !== except) closeDropdown(t);
+      });
+    }
+
+    function openDropdown(trigger: HTMLButtonElement) {
+      closeAll(trigger);
+      const { panel, input } = getParts(trigger);
+      trigger.setAttribute('aria-expanded', 'true');
+      panel.hidden = false;
+      const options = Array.from(panel.querySelectorAll<HTMLElement>('[role="option"]'));
+      const selected = options.find((o) => o.dataset.value === input.value) ?? options[0];
+      selected?.focus();
+    }
+
+    function selectOption(trigger: HTMLButtonElement, option: HTMLElement) {
+      const { input, valueEl, panel, field } = getParts(trigger);
+      input.value = option.dataset.value ?? '';
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      valueEl.textContent = option.textContent ?? '';
+      trigger.dataset.hasValue = 'true';
+      panel.querySelectorAll('[role="option"]').forEach((o) => o.removeAttribute('aria-selected'));
+      option.setAttribute('aria-selected', 'true');
+      closeDropdown(trigger);
+      trigger.focus();
+      clearFieldError(field);
+    }
+
+    triggers.forEach((trigger) => {
+      const { panel } = getParts(trigger);
+
+      trigger.addEventListener('click', () => {
+        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+        if (isOpen) {
+          closeDropdown(trigger);
+        } else {
+          openDropdown(trigger);
+        }
+      });
+
+      trigger.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openDropdown(trigger);
+        }
+      });
+
+      panel.addEventListener('click', (event) => {
+        const option = (event.target as HTMLElement).closest<HTMLElement>('[role="option"]');
+        if (option) selectOption(trigger, option);
+      });
+
+      panel.addEventListener('keydown', (event) => {
+        const options = Array.from(panel.querySelectorAll<HTMLElement>('[role="option"]'));
+        const currentIndex = options.indexOf(document.activeElement as HTMLElement);
+
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          options[Math.min(currentIndex + 1, options.length - 1)]?.focus();
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          options[Math.max(currentIndex - 1, 0)]?.focus();
+        } else if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          const active = document.activeElement as HTMLElement;
+          if (options.includes(active)) selectOption(trigger, active);
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          closeDropdown(trigger);
+          trigger.focus();
+        } else if (event.key === 'Tab') {
+          closeDropdown(trigger);
+        }
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Node)) return;
+      triggers.forEach((trigger) => {
+        if (trigger.getAttribute('aria-expanded') !== 'true') return;
+        const field = trigger.closest('.contact__field');
+        if (field && !field.contains(event.target as Node)) {
+          closeDropdown(trigger);
+        }
+      });
+    });
+  }
+
   function initContactForm() {
     const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
     if (!form) return;
 
-    const requiredFields = Array.from(
-      form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('[required]')
+    const requiredNativeFields = Array.from(
+      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]')
     );
+    const requiredDropdownInputs = Array.from(
+      form.querySelectorAll<HTMLInputElement>('[data-dropdown-input][data-required]')
+    );
+
+    function showError(field: HTMLElement, show: boolean) {
+      const errorEl = field.closest('.contact__field')?.querySelector<HTMLElement>('[data-error]');
+      if (errorEl) errorEl.hidden = !show;
+    }
 
     form.addEventListener('submit', (event) => {
       let firstInvalid: HTMLElement | null = null;
 
-      requiredFields.forEach((field) => {
+      requiredNativeFields.forEach((field) => {
         const isValid = field.checkValidity();
-        const errorEl = field.closest('.contact__field')?.querySelector<HTMLElement>('[data-error]');
-        if (errorEl) {
-          errorEl.hidden = isValid;
-        }
+        showError(field, !isValid);
         if (!isValid && !firstInvalid) {
           firstInvalid = field;
+        }
+      });
+
+      requiredDropdownInputs.forEach((field) => {
+        const isValid = field.value.trim() !== '';
+        showError(field, !isValid);
+        if (!isValid && !firstInvalid) {
+          firstInvalid = field.closest('.contact__field')?.querySelector<HTMLElement>('[data-dropdown-trigger]') ?? null;
         }
       });
 
@@ -250,5 +633,6 @@ const successRedirect = routes.contactSuccess[lang];
     });
   }
 
+  initDropdowns();
   initContactForm();
 </script>

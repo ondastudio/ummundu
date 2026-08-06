@@ -15,10 +15,19 @@ const { lang, title, currentRoute } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <div class="page">
+      <slot />
+    </div>
     <MenuOverlay lang={lang} currentRoute={currentRoute} />
   </body>
 </html>
+
+<style>
+  .page {
+    padding: 0 var(--space-page-padding) 26px;
+  }
+</style>

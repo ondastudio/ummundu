@@ -2,6 +2,7 @@
 import { marked } from 'marked';
 import Header from '../Header.astro';
 import Footer from '../Footer.astro';
+import LabeledSection from '../LabeledSection.astro';
 import { splitBilingualBody } from '../../lib/splitBilingualBody';
 import type { CollectionEntry } from 'astro:content';
 import type { CurrentRoute } from '../../content/copy/routes';
@@ -21,27 +22,32 @@ const currentRoute: CurrentRoute = { destinationId: entry.id };
 ---
 <Header lang={lang} variant="withMenu" />
 <main class="destination-page">
-  <p class="destination-page__eyebrow">{country}</p>
-  <h1 class="destination-page__title">{title}</h1>
-  <div class="destination-page__body" set:html={bodyHtml} />
+  <section class="destination-page__hero">
+    <LabeledSection label={country} style="--labeled-section-margin-top: 0">
+      <div class="destination-page__copy">
+        <p class="destination-page__title">{title}</p>
+        <div class="destination-page__body" set:html={bodyHtml} />
+      </div>
+    </LabeledSection>
+  </section>
 </main>
-<Footer lang={lang} currentRoute={currentRoute} />
+<Footer lang={lang} currentRoute={currentRoute} style="--site-footer-margin-top: 0" />
 
 <style>
   .destination-page {
-    width: var(--content-block-width);
-    margin: 0 auto;
-    padding-top: 244px;
-    padding-bottom: 100px;
+    width: 100%;
   }
 
-  .destination-page__eyebrow {
-    font-size: var(--text-label-size);
-    line-height: var(--text-label-line);
-    letter-spacing: var(--text-label-tracking);
-    text-transform: uppercase;
-    color: var(--color-text-muted-70);
-    margin: 0 0 16px;
+  .destination-page__hero {
+    height: 100vh;
+    padding-top: 244px;
+  }
+
+  .destination-page__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 560px;
   }
 
   .destination-page__title {
@@ -49,12 +55,17 @@ const currentRoute: CurrentRoute = { destinationId: entry.id };
     line-height: var(--text-page-title-line);
     letter-spacing: var(--text-page-title-tracking);
     font-weight: normal;
-    margin: 0 0 16px;
+    margin: 0;
   }
 
   .destination-page__body {
     font-size: var(--text-body-size);
     line-height: var(--text-body-line);
     letter-spacing: var(--text-body-tracking);
+    width: 550px;
+  }
+
+  .destination-page__body :global(p) {
+    margin: 0;
   }
 </style>

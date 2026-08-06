@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Header from '../Header.astro';
 import Footer from '../Footer.astro';
+import LabeledSection from '../LabeledSection.astro';
 import { homeCopy } from '../../content/copy/home';
 import type { CurrentRoute } from '../../content/copy/routes';
 
@@ -25,52 +26,39 @@ const destinations = await getCollection('destinations');
     <div class="home__divider"></div>
   </section>
 
-  <section class="home__section">
-    <p class="home__label">{t.essenceLabel}</p>
-    <div class="home__body-row">
-      <p class="home__body">{t.essenceBody}</p>
-    </div>
-  </section>
+  <LabeledSection label={t.essenceLabel} style="--labeled-section-margin-top: 167px">
+    <p>{t.essenceBody}</p>
+  </LabeledSection>
 
-  <section class="home__section">
-    <p class="home__label">{t.approachLabel}</p>
-    <div class="home__body-row">
-      <p class="home__body">{t.approachBody}</p>
-    </div>
-  </section>
+  <LabeledSection label={t.approachLabel}>
+    <p>{t.approachBody}</p>
+  </LabeledSection>
 
-  <section class="home__section">
-    <p class="home__label">{t.accessLabel}</p>
-    <div class="home__body-row">
-      <ul class="home__access-list">
-        {t.accessList.map((item) => <li>{item}</li>)}
-      </ul>
-    </div>
-  </section>
+  <LabeledSection label={t.accessLabel}>
+    <ul class="home__access-list">
+      {t.accessList.map((item) => <li>{item}</li>)}
+    </ul>
+  </LabeledSection>
 
-  <section class="home__section">
-    <p class="home__label">{t.destinationsLabel}</p>
-    <div class="home__body-row">
-      <ul class="home__destination-list">
-        {destinations.map((entry) => (
-          <li>
-            <a href={lang === 'pt' ? `/${entry.id}` : `/en/${entry.id}`}>
-              {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
-            </a>
-            {' · '}
-            {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  <LabeledSection label={t.destinationsLabel}>
+    <ul class="home__destination-list">
+      {destinations.map((entry) => (
+        <li>
+          <a href={lang === 'pt' ? `/${entry.id}` : `/en/${entry.id}`}>
+            {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
+          </a>
+          {' · '}
+          {lang === 'pt' ? entry.data.country_pt : entry.data.country_en}
+        </li>
+      ))}
+    </ul>
+  </LabeledSection>
 </main>
 <Footer lang={lang} currentRoute={currentRoute} />
 
 <style>
   .home {
     width: 100%;
-    padding: 0 var(--space-page-padding);
   }
 
   .home__hero {
@@ -79,7 +67,6 @@ const destinations = await getCollection('destinations');
     flex-direction: column;
     align-items: flex-end;
     height: 100vh;
-    padding-top: 241px;
   }
 
   .home__menu-link,
@@ -149,52 +136,10 @@ const destinations = await getCollection('destinations');
     margin: 30px 0;
   }
 
-  .home__section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 199px;
-  }
-
-  .home__section:first-of-type {
-    /* .home__divider already contributes 30px via its own margin-bottom,
-       which doesn't collapse out of the flex hero — so 137 + 30 = 167px total. */
-    margin-top: 137px;
-  }
-
-  .home__label {
-    font-size: var(--text-label-size);
-    line-height: var(--text-label-line);
-    letter-spacing: var(--text-label-tracking);
-    text-transform: uppercase;
-    color: var(--color-text-muted-70);
-    margin: 0;
-    flex-shrink: 0;
-  }
-
-  .home__body-row {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-  }
-
-  .home__body {
-    font-size: var(--text-body-size);
-    line-height: var(--text-body-line);
-    letter-spacing: var(--text-body-tracking);
-    margin: 0;
-    max-width: var(--content-block-width);
-  }
-
   .home__access-list,
   .home__destination-list {
     list-style: none;
-    margin: 0;
     padding: 0;
-    max-width: var(--content-block-width);
-    font-size: var(--text-body-size);
-    line-height: var(--text-body-line);
-    letter-spacing: var(--text-body-tracking);
   }
 
   .home__access-list li {

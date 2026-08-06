@@ -151,7 +151,7 @@ Two font families: **Fahkwang** (hero display title only, weight 200/ExtraLight)
 | Form asterisk | Manrope 300, 13px/18px, 3% tracking | Manrope 300, 11px/16px, 3% tracking |
 | Required/privacy text | Manrope 400, 11px/18px, 3% tracking | Manrope 400, 10px/16px, 3% tracking |
 | CTA button | Manrope 400, 13px/18px, 3% tracking | Manrope 400, 11px/16px, 3% tracking |
-| Selected value / dropdown option | Manrope 400, 13px/18px, 3% tracking, 70% fill | Manrope 400, 11px/16px, 3% tracking, 70% fill |
+| Selected value / dropdown option / input data | Manrope 400, 13px/18px, 3% tracking, 70% fill | Manrope 400, 11px/16px, 3% tracking, 70% fill |
 | Error note | Manrope 400, 11px/18px, 3% tracking, `#8A2A2A` | Manrope 400, 10px/16px, 3% tracking, `#8A2A2A` |
 | Footer contact link | Manrope 400, 13px/24px | Manrope 400, 11px/20px |
 | Footer legal links / language selector | Manrope 400, 12px/24px | Manrope 400, 10px/20px |

@@ -1,5 +1,6 @@
 ---
 import { headerCopy } from '../content/copy/header';
+import { routes } from '../content/copy/routes';
 
 interface Props {
   lang: 'pt' | 'en';
@@ -10,7 +11,9 @@ const { lang, variant = 'withMenu' } = Astro.props;
 const { menuAriaLabel } = headerCopy[lang];
 ---
 <header class="site-header">
-  <img src="/logo.svg" alt="Ummundu" class="site-header__logo" />
+  <a href={routes.home[lang]} class="site-header__logo-link">
+    <img src="/logo.svg" alt="Ummundu" class="site-header__logo" />
+  </a>
   {variant === 'withMenu' && (
     <a href="#menu" class="site-header__menu-link" data-menu-trigger aria-label={menuAriaLabel}>menu</a>
   )}
@@ -29,6 +32,11 @@ const { menuAriaLabel } = headerCopy[lang];
     right: 0;
     z-index: 10;
     padding: 0 var(--space-page-padding);
+  }
+
+  .site-header__logo-link {
+    display: flex;
+    text-decoration: none;
   }
 
   .site-header__logo {

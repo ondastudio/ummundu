@@ -35,8 +35,15 @@ const { current, alternate } = languageSwitcherCopy[lang];
   }
 
   .language-switcher[data-context='footer'] {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
     font-size: var(--text-footer-legal-size);
     line-height: var(--text-footer-legal-line);
+  }
+
+  .language-switcher[data-context='footer'] .language-switcher__separator {
+    display: none;
   }
 
   .language-switcher[data-context='menu'] {

@@ -17,14 +17,13 @@ const { label, message } = contactSuccessCopy[lang];
   <p class="contact-success__label">{label}</p>
   <p class="contact-success__message">{message}</p>
 </main>
-<Footer lang={lang} showContactLink={false} currentRoute={currentRoute} />
+<Footer lang={lang} showContactLink={false} currentRoute={currentRoute} style="--site-footer-margin-top: 0" />
 
 <style>
   .contact-success {
-    width: var(--content-block-width);
-    margin: 0 auto;
+    width: 100%;
+    height: 100vh;
     padding-top: 244px;
-    padding-bottom: 100px;
   }
 
   .contact-success__label {
@@ -33,13 +32,14 @@ const { label, message } = contactSuccessCopy[lang];
     letter-spacing: var(--text-label-tracking);
     text-transform: uppercase;
     color: var(--color-text-muted-70);
-    margin: 0 0 14px;
+    margin: 0;
   }
 
   .contact-success__message {
+    width: var(--content-block-width);
+    margin: 0 0 0 auto;
     font-size: var(--text-body-size);
     line-height: var(--text-body-line);
     letter-spacing: var(--text-body-tracking);
-    margin: 0;
   }
 </style>

@@ -24,35 +24,45 @@ const { lang, currentRoute, label, title, intro, sections } = Astro.props;
   <Header lang={lang} variant="withMenu" />
   <main class="legal">
     <p class="legal__label">{label}</p>
-    <h1 class="legal__title">{title}</h1>
-    <p class="legal__intro">{intro}</p>
-    <div class="legal__sections">
-      {sections.map((section, index) => (
-        <section class="legal__section">
-          <h2 class="legal__section-title">{index + 1}. {section.title}</h2>
-          <p class="legal__section-body">{section.body}</p>
-        </section>
-      ))}
+    <div class="legal__content">
+      <h1 class="legal__title">{title}</h1>
+      <p class="legal__intro">{intro}</p>
+      <div class="legal__sections">
+        {sections.map((section, index) => (
+          <section class="legal__section">
+            <h2 class="legal__section-title">{index + 1}. {section.title}</h2>
+            <p class="legal__section-body">{section.body}</p>
+          </section>
+        ))}
+      </div>
     </div>
   </main>
-  <Footer lang={lang} currentRoute={currentRoute} />
+  <Footer lang={lang} currentRoute={currentRoute} style="--site-footer-margin-top: 145px" />
 </BaseLayout>
 
 <style>
   .legal {
-    width: var(--content-block-width);
-    margin: 0 auto;
-    padding-top: 244px;
-    padding-bottom: 100px;
+    width: 100%;
   }
 
   .legal__label {
+    position: fixed;
+    top: 244px;
+    left: var(--space-page-padding);
+    z-index: 5;
     font-size: var(--text-label-size);
     line-height: var(--text-label-line);
     letter-spacing: var(--text-label-tracking);
     text-transform: uppercase;
     color: var(--color-text-muted-70);
-    margin: 0 0 14px;
+    margin: 0;
+  }
+
+  .legal__content {
+    width: var(--content-block-width);
+    min-height: 100vh;
+    margin-left: auto;
+    padding-top: calc(244px + var(--text-label-line));
   }
 
   .legal__title {

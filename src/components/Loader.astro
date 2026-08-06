@@ -17,9 +17,14 @@
     transition: opacity 250ms ease-out;
   }
 
-  .loader.is-hidden {
+  .loader.is-hidden,
+  .loader.is-skipped {
     opacity: 0;
     pointer-events: none;
+  }
+
+  .loader.is-skipped {
+    transition: none;
   }
 
   .loader__logo {
@@ -28,12 +33,22 @@
   }
 </style>
 
-<script>
-  window.addEventListener('load', () => {
-    const loader = document.getElementById('loader');
+<script is:inline>
+  (function () {
+    var loader = document.getElementById('loader');
     if (!loader) return;
-    setTimeout(() => {
-      loader.classList.add('is-hidden');
-    }, 2500);
-  });
+    var SESSION_KEY = 'ummundu-loader-seen';
+
+    if (sessionStorage.getItem(SESSION_KEY)) {
+      loader.classList.add('is-skipped');
+      return;
+    }
+
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        loader.classList.add('is-hidden');
+        sessionStorage.setItem(SESSION_KEY, '1');
+      }, 2500);
+    });
+  })();
 </script>

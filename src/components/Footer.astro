@@ -7,13 +7,15 @@ interface Props {
   lang: 'pt' | 'en';
   showContactLink?: boolean;
   currentRoute: CurrentRoute;
+  style?: string;
 }
 
-const { lang, showContactLink = true, currentRoute } = Astro.props;
+const { lang, showContactLink = true, currentRoute, style } = Astro.props;
 const { contact, legalLinks, legalNote } = footerCopy[lang];
 const contactHref = routes.contact[lang];
+const currentYear = new Date().getFullYear();
 ---
-<footer class="site-footer" data-has-contact-link={showContactLink}>
+<footer class="site-footer" data-has-contact-link={showContactLink} style={style}>
   {showContactLink && (
     <a href={contactHref} class="site-footer__contact">{contact}</a>
   )}
@@ -27,17 +29,18 @@ const contactHref = routes.contact[lang];
   </div>
   <div class="site-footer__note">
     <p>{legalNote}</p>
-    <p>© 2026 UMMUNDU</p>
+    <p>© {currentYear} UMMUNDU</p>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    width: var(--content-block-width);
+    width: 560px;
     display: flex;
     flex-direction: column;
     gap: 71px;
-    padding-bottom: var(--space-footer-padding);
+    margin-top: var(--site-footer-margin-top, 219px);
+    margin-left: auto;
     font-family: var(--font-body);
   }
 
@@ -46,13 +49,14 @@ const contactHref = routes.contact[lang];
   }
 
   .site-footer__contact {
+    align-self: center;
     font-size: var(--text-footer-contact-size);
     line-height: var(--text-footer-contact-line);
   }
 
   .site-footer__utilities {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     width: 100%;
   }

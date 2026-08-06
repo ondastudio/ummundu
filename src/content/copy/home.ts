@@ -1,6 +1,6 @@
 export const homeCopy = {
   pt: {
-    title: 'Ummundu — Viagens',
+    title: 'Ummundu',
     heroLines: ['viajar', 'entre', 'movimento', 'e quietude'],
     essenceLabel: 'Essência',
     essenceBody:
@@ -24,7 +24,7 @@ export const homeCopy = {
     menuAriaLabel: 'Abrir menu',
   },
   en: {
-    title: 'Ummundu — Travel',
+    title: 'Ummundu',
     heroLines: ['travel', 'between', 'motion and', 'stillness'],
     essenceLabel: 'Essence',
     essenceBody:
