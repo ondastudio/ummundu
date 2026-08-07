@@ -1,0 +1,15 @@
+---
+import LegalPage from '../layouts/LegalPage.astro';
+import { routes } from '../content/copy/routes';
+import { legalPages } from '../content/copy/legal';
+
+export function getStaticPaths() {
+  return legalPages.map(({ route, copy }) => ({
+    params: { legal: routes[route].pt.slice(1) },
+    props: { currentRoute: route, copy: copy.pt },
+  }));
+}
+
+const { currentRoute, copy } = Astro.props;
+---
+<LegalPage lang="pt" currentRoute={currentRoute} {...copy} />

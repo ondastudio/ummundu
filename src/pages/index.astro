@@ -1,10 +1,10 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Loader from '../components/Loader.astro';
-import HomeContent from '../components/pages/HomeContent.astro';
-import { homeCopy } from '../content/copy/home';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Loader from '../../components/Loader.astro';
+import HomeContent from '../../components/pages/HomeContent.astro';
+import { homeCopy } from '../../content/copy/home';
 ---
-<BaseLayout lang="pt" title={homeCopy.pt.title} currentRoute="home">
+<BaseLayout lang="en" title={homeCopy.en.title} currentRoute="home">
   <Loader />
-  <HomeContent lang="pt" currentRoute="home" />
+  <HomeContent lang="en" currentRoute="home" />
 </BaseLayout>
