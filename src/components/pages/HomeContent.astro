@@ -44,7 +44,7 @@ const destinations = await getCollection('destinations');
     <ul class="home__destination-list">
       {destinations.map((entry) => (
         <li>
-          <a href={lang === 'pt' ? `/${entry.id}` : `/en/${entry.id}`}>
+          <a href={lang === 'en' ? `/${entry.id}` : `/pt/${entry.id}`}>
             {lang === 'pt' ? entry.data.title_pt : entry.data.title_en}
           </a>
           {' · '}

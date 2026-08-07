@@ -1,11 +1,11 @@
 ---
-import LegalPage from '../layouts/LegalPage.astro';
-import { routes } from '../content/copy/routes';
-import { legalPages } from '../content/copy/legal';
+import LegalPage from '../../layouts/LegalPage.astro';
+import { routes } from '../../content/copy/routes';
+import { legalPages } from '../../content/copy/legal';
 
 export function getStaticPaths() {
   return legalPages.map(({ route, copy }) => ({
-    params: { legal: routes[route].pt.slice(1) },
+    params: { legal: routes[route].pt.replace('/pt/', '') },
     props: { currentRoute: route, copy: copy.pt },
   }));
 }

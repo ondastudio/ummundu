@@ -44,9 +44,14 @@
       return;
     }
 
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
     window.addEventListener('load', function () {
       setTimeout(function () {
         loader.classList.add('is-hidden');
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
         sessionStorage.setItem(SESSION_KEY, '1');
       }, 2500);
     });

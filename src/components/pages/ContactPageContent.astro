@@ -14,7 +14,7 @@ interface Props {
 const { lang, currentRoute } = Astro.props;
 const t = contactCopy[lang];
 const destinations = await getCollection('destinations');
-const years = getDepartureYears(new Date().getFullYear(), 3);
+const years = getDepartureYears(new Date().getFullYear(), 2);
 const privacyHref = routes.privacy[lang];
 const successRedirect = routes.contactSuccess[lang];
 ---
@@ -281,13 +281,6 @@ const successRedirect = routes.contactSuccess[lang];
     display: flex;
     flex-direction: column;
     gap: 4px;
-    border-bottom: 1px solid var(--color-text-muted-20);
-    padding-bottom: 4px;
-  }
-
-  .contact__field--message {
-    border-bottom: none;
-    padding-bottom: 0;
   }
 
   .contact__row {
@@ -295,6 +288,14 @@ const successRedirect = routes.contactSuccess[lang];
     align-items: center;
     gap: 37px;
     width: 100%;
+    border-bottom: 1px solid var(--color-text-muted-20);
+    padding-bottom: 4px;
+    transition: border-color 150ms ease;
+  }
+
+  .contact__row:has(input:focus),
+  .contact__row:has(textarea:focus) {
+    border-color: var(--color-text);
   }
 
   .contact__field-label {
@@ -341,6 +342,27 @@ const successRedirect = routes.contactSuccess[lang];
     padding: 6px 10px;
     height: 92px;
     resize: none;
+    overflow-y: auto;
+    transition: border-color 150ms ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-text-muted-20) transparent;
+  }
+
+  .contact__field--message textarea::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .contact__field--message textarea::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .contact__field--message textarea::-webkit-scrollbar-thumb {
+    background-color: var(--color-text-muted-20);
+    border-radius: 3px;
+  }
+
+  .contact__field--message textarea:focus {
+    border-color: var(--color-text);
   }
 
   .contact__required {
@@ -353,6 +375,10 @@ const successRedirect = routes.contactSuccess[lang];
     line-height: var(--text-form-meta-line);
     letter-spacing: var(--text-form-meta-tracking);
     margin: 0;
+  }
+
+  .contact__required-note--error {
+    color: var(--color-error);
   }
 
   .contact__error {
@@ -374,6 +400,13 @@ const successRedirect = routes.contactSuccess[lang];
     padding: 8px 40px;
     cursor: pointer;
     color: var(--color-text);
+    transition: background 150ms ease;
+  }
+
+  .contact__submit:hover,
+  .contact__submit:focus-visible {
+    background: var(--color-text-muted-10);
+    outline: none;
   }
 
   /* Dropdown */
@@ -446,6 +479,21 @@ const successRedirect = routes.contactSuccess[lang];
     list-style: none;
     background: var(--color-bg);
     border: 1px solid var(--color-text-muted-40);
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-text-muted-20) transparent;
+  }
+
+  .dropdown__panel::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .dropdown__panel::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .dropdown__panel::-webkit-scrollbar-thumb {
+    background-color: var(--color-text-muted-20);
+    border-radius: 3px;
   }
 
   .dropdown__panel[hidden] {
@@ -465,18 +513,29 @@ const successRedirect = routes.contactSuccess[lang];
     color: var(--color-text-muted-70);
     text-align: center;
     cursor: pointer;
-    transition: background 150ms ease;
+    transition: background 150ms ease, color 150ms ease;
   }
 
   .dropdown__panel li:hover,
   .dropdown__panel li:focus-visible,
   .dropdown__panel li[aria-selected='true'] {
-    background: var(--color-text-muted-20);
+    background: var(--color-text-muted-10);
+    color: var(--color-text);
     outline: none;
   }
 </style>
 
 <script>
+  function updateRequiredNote() {
+    const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+    if (!form) return;
+    const requiredNote = document.querySelector<HTMLElement>('.contact__required-note');
+    const hasVisibleError = Array.from(form.querySelectorAll<HTMLElement>('[data-error]')).some(
+      (el) => !el.hidden
+    );
+    requiredNote?.classList.toggle('contact__required-note--error', hasVisibleError);
+  }
+
   function initDropdowns() {
     const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
     if (!form) return;
@@ -495,6 +554,7 @@ const successRedirect = routes.contactSuccess[lang];
     function clearFieldError(field: HTMLElement) {
       const errorEl = field.querySelector<HTMLElement>('[data-error]');
       if (errorEl) errorEl.hidden = true;
+      updateRequiredNote();
     }
 
     function closeDropdown(trigger: HTMLButtonElement) {
@@ -596,11 +656,12 @@ const successRedirect = routes.contactSuccess[lang];
     const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
     if (!form) return;
 
-    const requiredNativeFields = Array.from(
-      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]')
-    );
-    const requiredDropdownInputs = Array.from(
-      form.querySelectorAll<HTMLInputElement>('[data-dropdown-input][data-required]')
+    // Combined in DOM order so "first field with error" reflects visual top-to-bottom order,
+    // since dropdown fields sit earlier in the form than the native name/email inputs.
+    const requiredFields = Array.from(
+      form.querySelectorAll<HTMLElement>(
+        'input[required], textarea[required], [data-dropdown-input][data-required]'
+      )
     );
 
     function showError(field: HTMLElement, show: boolean) {
@@ -611,25 +672,27 @@ const successRedirect = routes.contactSuccess[lang];
     form.addEventListener('submit', (event) => {
       let firstInvalid: HTMLElement | null = null;
 
-      requiredNativeFields.forEach((field) => {
-        const isValid = field.checkValidity();
+      requiredFields.forEach((field) => {
+        const isDropdownField = field.hasAttribute('data-dropdown-input');
+        const isValid = isDropdownField
+          ? (field as HTMLInputElement).value.trim() !== ''
+          : (field as HTMLInputElement | HTMLTextAreaElement).checkValidity();
+
         showError(field, !isValid);
+
         if (!isValid && !firstInvalid) {
-          firstInvalid = field;
+          firstInvalid = isDropdownField
+            ? field.closest('.contact__field')?.querySelector<HTMLElement>('[data-dropdown-trigger]') ?? null
+            : field;
         }
       });
 
-      requiredDropdownInputs.forEach((field) => {
-        const isValid = field.value.trim() !== '';
-        showError(field, !isValid);
-        if (!isValid && !firstInvalid) {
-          firstInvalid = field.closest('.contact__field')?.querySelector<HTMLElement>('[data-dropdown-trigger]') ?? null;
-        }
-      });
+      updateRequiredNote();
 
       if (firstInvalid) {
         event.preventDefault();
-        (firstInvalid as HTMLElement).focus();
+        (firstInvalid as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        (firstInvalid as HTMLElement).focus({ preventScroll: true });
       }
     });
   }

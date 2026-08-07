@@ -13,7 +13,7 @@ const { lang, currentRoute } = Astro.props;
 const destinations = await getCollection('destinations');
 const t = menuOverlayCopy[lang];
 const contactHref = routes.contact[lang];
-const destinationHref = (id: string) => (lang === 'pt' ? `/${id}` : `/en/${id}`);
+const destinationHref = (id: string) => (lang === 'en' ? `/${id}` : `/pt/${id}`);
 ---
 <div class="menu-overlay" data-menu-overlay data-state="closed">
   <div class="menu-overlay__backdrop" data-menu-backdrop></div>
@@ -193,6 +193,12 @@ const destinationHref = (id: string) => (lang === 'pt' ? `/${id}` : `/en/${id}`)
   }
 </style>
 
+<style is:global>
+  body.menu-open {
+    overflow: hidden;
+  }
+</style>
+
 <script>
   function initMenuOverlay() {
     const overlay = document.querySelector<HTMLElement>('[data-menu-overlay]');
@@ -200,6 +206,7 @@ const destinationHref = (id: string) => (lang === 'pt' ? `/${id}` : `/en/${id}`)
 
     const setState = (state: 'closed' | 'state1' | 'state2') => {
       overlay.dataset.state = state;
+      document.body.classList.toggle('menu-open', state !== 'closed');
     };
 
     document.querySelectorAll('[data-menu-trigger]').forEach((trigger) => {

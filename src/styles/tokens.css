@@ -42,6 +42,7 @@
   --color-text-muted-50: rgba(50, 45, 40, 0.5);
   --color-text-muted-40: rgba(50, 45, 40, 0.4);
   --color-text-muted-20: rgba(50, 45, 40, 0.2);
+  --color-text-muted-10: rgba(50, 45, 40, 0.1);
   --color-overlay-backdrop: rgba(50, 45, 40, 0.7);
 
   /* Fonts */
