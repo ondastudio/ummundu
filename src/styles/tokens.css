@@ -102,6 +102,7 @@
 
   /* Spacing (style guide docs) */
   --space-page-padding: 50px;
+  --tablet-space-page-padding: 30px;
   --space-header-height: 77px;
   --space-logo-offset: 30px;
   --space-footer-padding: 30px;

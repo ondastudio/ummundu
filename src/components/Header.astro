@@ -53,6 +53,16 @@ const { menuAriaLabel } = headerCopy[lang];
     text-transform: capitalize;
   }
 
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .site-header {
+      padding: 0 var(--tablet-space-page-padding);
+    }
+
+    .site-header__menu-link {
+      right: var(--tablet-space-page-padding);
+    }
+  }
+
   @media (max-width: 767px) {
     .site-header {
       height: var(--mobile-space-header-height);

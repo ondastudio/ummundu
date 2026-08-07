@@ -101,6 +101,12 @@ const { lang, currentRoute, label, title, intro, sections } = Astro.props;
     margin: 0;
   }
 
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .legal__label {
+      left: var(--tablet-space-page-padding);
+    }
+  }
+
   @media (max-width: 767px) {
     .legal__label {
       top: 152px;

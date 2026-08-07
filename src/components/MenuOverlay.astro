@@ -205,6 +205,12 @@ const destinationHref = (id: string) => (lang === 'en' ? `/${id}` : `/pt/${id}`)
     align-self: center;
   }
 
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .menu-overlay__panel {
+      padding: 0 var(--tablet-space-page-padding) 28px;
+    }
+  }
+
   @media (max-width: 767px) {
     .menu-overlay__panel {
       width: 100%;

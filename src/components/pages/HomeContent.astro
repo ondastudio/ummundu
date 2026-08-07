@@ -163,6 +163,12 @@ const destinations = await getCollection('destinations');
     margin-bottom: 20px;
   }
 
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .home__menu-link-pinned {
+      right: var(--tablet-space-page-padding);
+    }
+  }
+
   @media (max-width: 767px) {
     /* The mobile design centers "Menu" within the space above the display
        block, rather than at the hero's own vertical center (the desktop
