@@ -23,7 +23,7 @@ const currentRoute: CurrentRoute = { destinationId: entry.id };
 <Header lang={lang} variant="withMenu" />
 <main class="destination-page">
   <section class="destination-page__hero">
-    <LabeledSection label={country} style="--labeled-section-margin-top: 0">
+    <LabeledSection label={country} style="--labeled-section-margin-top: 0; --mobile-labeled-section-margin-top: 0">
       <div class="destination-page__copy">
         <p class="destination-page__title">{title}</p>
         <div class="destination-page__body" set:html={bodyHtml} />
@@ -31,7 +31,7 @@ const currentRoute: CurrentRoute = { destinationId: entry.id };
     </LabeledSection>
   </section>
 </main>
-<Footer lang={lang} currentRoute={currentRoute} style="--site-footer-margin-top: 0" />
+<Footer lang={lang} currentRoute={currentRoute} style="--site-footer-margin-top: 0; --mobile-site-footer-margin-top: 60px" />
 
 <style>
   .destination-page {
@@ -67,5 +67,28 @@ const currentRoute: CurrentRoute = { destinationId: entry.id };
 
   .destination-page__body :global(p) {
     margin: 0;
+  }
+
+  @media (max-width: 767px) {
+    .destination-page__hero {
+      height: 100vh;
+      padding-top: 152px;
+    }
+
+    .destination-page__copy {
+      gap: 17px;
+      width: 100%;
+    }
+
+    .destination-page__title {
+      font-size: var(--mobile-text-page-title-size);
+      line-height: var(--mobile-text-page-title-line);
+    }
+
+    .destination-page__body {
+      font-size: var(--mobile-text-body-size);
+      line-height: var(--mobile-text-body-line);
+      width: 100%;
+    }
   }
 </style>

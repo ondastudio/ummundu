@@ -30,4 +30,10 @@ const { lang, title, currentRoute } = Astro.props;
   .page {
     padding: 0 var(--space-page-padding) 26px;
   }
+
+  @media (max-width: 767px) {
+    .page {
+      padding: 0 var(--mobile-space-page-padding) 17px;
+    }
+  }
 </style>

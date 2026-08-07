@@ -19,6 +19,9 @@ const destinationHref = (id: string) => (lang === 'en' ? `/${id}` : `/pt/${id}`)
   <div class="menu-overlay__backdrop" data-menu-backdrop></div>
   <div class="menu-overlay__panel" data-menu-panel>
     <div class="menu-overlay__panel-top">
+      <a href={routes.home[lang]} class="menu-overlay__logo-link">
+        <img src="/logo.svg" alt="Ummundu" class="menu-overlay__logo" />
+      </a>
       <a href="#close" class="menu-overlay__close" data-menu-close>{t.close}</a>
     </div>
 
@@ -101,6 +104,16 @@ const destinationHref = (id: string) => (lang === 'en' ? `/${id}` : `/pt/${id}`)
     display: flex;
     align-items: center;
     justify-content: flex-end;
+  }
+
+  .menu-overlay__logo-link {
+    display: none;
+    text-decoration: none;
+  }
+
+  .menu-overlay__logo {
+    height: 16.92px;
+    width: 151.192px;
   }
 
   .menu-overlay__close,
@@ -190,6 +203,59 @@ const destinationHref = (id: string) => (lang === 'en' ? `/${id}` : `/pt/${id}`)
   .menu-overlay__back {
     margin-top: auto;
     align-self: center;
+  }
+
+  @media (max-width: 767px) {
+    .menu-overlay__panel {
+      width: 100%;
+      padding: 0 var(--mobile-space-page-padding) var(--mobile-space-page-padding);
+    }
+
+    .menu-overlay__panel-top {
+      height: var(--mobile-space-header-height);
+      justify-content: space-between;
+    }
+
+    .menu-overlay__logo-link {
+      display: flex;
+    }
+
+    .menu-overlay__logo {
+      width: 125.993px;
+      height: 14.1px;
+    }
+
+    .menu-overlay__close,
+    .menu-overlay__back {
+      font-size: var(--mobile-text-menu-size);
+      line-height: var(--mobile-text-menu-line);
+    }
+
+    .menu-overlay__nav {
+      gap: 20px;
+      font-size: var(--mobile-text-menu-link-size);
+      line-height: var(--mobile-text-menu-link-line);
+    }
+
+    .menu-overlay__language {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .menu-overlay__state2 {
+      padding-top: 152px;
+      gap: 30px;
+    }
+
+    .menu-overlay__eyebrow {
+      font-size: var(--mobile-text-label-size);
+      line-height: var(--mobile-text-label-line);
+    }
+
+    .menu-overlay__destination-list {
+      font-size: var(--mobile-text-body-size);
+      line-height: var(--mobile-text-body-line);
+    }
   }
 </style>
 

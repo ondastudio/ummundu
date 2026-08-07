@@ -37,7 +37,7 @@ const { lang, currentRoute, label, title, intro, sections } = Astro.props;
       </div>
     </div>
   </main>
-  <Footer lang={lang} currentRoute={currentRoute} style="--site-footer-margin-top: 145px" />
+  <Footer lang={lang} currentRoute={currentRoute} style="--site-footer-margin-top: 145px; --mobile-site-footer-margin-top: 108px" />
 </BaseLayout>
 
 <style>
@@ -99,5 +99,48 @@ const { lang, currentRoute, label, title, intro, sections } = Astro.props;
     line-height: var(--text-body-line);
     letter-spacing: var(--text-body-tracking);
     margin: 0;
+  }
+
+  @media (max-width: 767px) {
+    .legal__label {
+      top: 152px;
+      left: var(--mobile-space-page-padding);
+      font-size: var(--mobile-text-label-size);
+      line-height: var(--mobile-text-label-line);
+    }
+
+    .legal__content {
+      width: 100%;
+      min-height: auto;
+      margin-left: 0;
+      padding-top: calc(152px + var(--mobile-text-label-line) + 30px);
+    }
+
+    .legal__title {
+      font-size: var(--mobile-text-page-title-size);
+      line-height: var(--mobile-text-page-title-line);
+      margin: 0 0 17px;
+    }
+
+    .legal__intro {
+      font-size: var(--mobile-text-body-size);
+      line-height: var(--mobile-text-body-line);
+      margin: 0 0 17px;
+    }
+
+    .legal__sections {
+      gap: 17px;
+    }
+
+    .legal__section-title {
+      font-size: var(--mobile-text-page-subtitle-size);
+      line-height: var(--mobile-text-page-subtitle-line);
+      margin: 0 0 7px;
+    }
+
+    .legal__section-body {
+      font-size: var(--mobile-text-body-size);
+      line-height: var(--mobile-text-body-line);
+    }
   }
 </style>

@@ -10,7 +10,7 @@ interface Props {
 const { lang, variant = 'withMenu' } = Astro.props;
 const { menuAriaLabel } = headerCopy[lang];
 ---
-<header class="site-header">
+<header class="site-header" data-variant={variant}>
   <a href={routes.home[lang]} class="site-header__logo-link">
     <img src="/logo.svg" alt="Ummundu" class="site-header__logo" />
   </a>
@@ -51,5 +51,33 @@ const { menuAriaLabel } = headerCopy[lang];
     line-height: var(--text-menu-line);
     letter-spacing: var(--text-menu-tracking);
     text-transform: capitalize;
+  }
+
+  @media (max-width: 767px) {
+    .site-header {
+      height: var(--mobile-space-header-height);
+      padding: 0 var(--mobile-space-page-padding);
+    }
+
+    .site-header__menu-link {
+      right: var(--mobile-space-page-padding);
+    }
+
+    .site-header__logo {
+      width: 125.993px;
+      height: 14.1px;
+    }
+
+    /* Pages with the menu link already in the bar have no hero to scroll
+       past, so the logo sits left-aligned from the start instead of
+       animating in like the Home page's scroll-triggered pin. */
+    .site-header[data-variant='withMenu'] .site-header__logo-link {
+      margin-right: auto;
+    }
+
+    .site-header__logo-link.is-home-pinned {
+      transform: translateX(var(--logo-pin-shift, 0px));
+      transition: transform 200ms ease;
+    }
   }
 </style>

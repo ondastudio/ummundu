@@ -45,4 +45,23 @@ const { label, style } = Astro.props;
     margin: 0;
     width: 560px;
   }
+
+  @media (max-width: 767px) {
+    .labeled-section {
+      margin-top: var(--mobile-labeled-section-margin-top, 142px);
+      gap: 30px;
+    }
+
+    .labeled-section__label {
+      font-size: var(--mobile-text-label-size);
+      line-height: var(--mobile-text-label-line);
+    }
+
+    .labeled-section__row > :global(p),
+    .labeled-section__row > :global(ul) {
+      font-size: var(--mobile-text-body-size);
+      line-height: var(--mobile-text-body-line);
+      width: 100%;
+    }
+  }
 </style>

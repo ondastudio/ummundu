@@ -18,7 +18,9 @@ const destinations = await getCollection('destinations');
 <Header lang={lang} variant="logoOnly" />
 <main class="home">
   <section class="home__hero">
-    <a href="#menu" class="home__menu-link" data-menu-trigger aria-label={t.menuAriaLabel}>Menu</a>
+    <div class="home__menu-area">
+      <a href="#menu" class="home__menu-link" data-menu-trigger aria-label={t.menuAriaLabel}>Menu</a>
+    </div>
     <a href="#menu" class="home__menu-link-pinned" data-menu-trigger aria-label={t.menuAriaLabel}>Menu</a>
     <h1 class="home__display">
       {t.heroLines.map((line) => <span>{line}</span>)}
@@ -26,7 +28,10 @@ const destinations = await getCollection('destinations');
     <div class="home__divider"></div>
   </section>
 
-  <LabeledSection label={t.essenceLabel} style="--labeled-section-margin-top: 167px">
+  <LabeledSection
+    label={t.essenceLabel}
+    style="--labeled-section-margin-top: 167px; --mobile-labeled-section-margin-top: 98px"
+  >
     <p>{t.essenceBody}</p>
   </LabeledSection>
 
@@ -54,7 +59,7 @@ const destinations = await getCollection('destinations');
     </ul>
   </LabeledSection>
 </main>
-<Footer lang={lang} currentRoute={currentRoute} />
+<Footer lang={lang} currentRoute={currentRoute} style="--mobile-site-footer-margin-top: 143px" />
 
 <style>
   .home {
@@ -84,6 +89,14 @@ const destinations = await getCollection('destinations');
     top: 50%;
     right: 0;
     transform: translateY(-100%);
+  }
+
+  /* On desktop this wrapper is a no-op (the link stays absolutely
+     positioned at the hero's center); on mobile it becomes the "Menu area"
+     flex-1 region so the link itself keeps its natural, measurable size
+     instead of stretching to fill the available space. */
+  .home__menu-area {
+    display: contents;
   }
 
   /* Fades out as it scrolls under the fixed header; visibility switch is
@@ -149,33 +162,91 @@ const destinations = await getCollection('destinations');
   .home__destination-list li {
     margin-bottom: 20px;
   }
+
+  @media (max-width: 767px) {
+    /* The mobile design centers "Menu" within the space above the display
+       block, rather than at the hero's own vertical center (the desktop
+       trick), so the wrapper (not the link itself) becomes the flex-1
+       region — keeping the link's own box sized to its text so scroll
+       math measuring it stays accurate. */
+    .home__menu-area {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: flex-end;
+      padding-top: 40px;
+    }
+
+    .home__menu-link {
+      position: static;
+      transform: none;
+    }
+
+    .home__menu-link-pinned {
+      top: calc(var(--mobile-space-header-height) / 2);
+      right: var(--mobile-space-page-padding);
+    }
+
+    .home__display {
+      font-size: var(--mobile-text-display-size);
+      line-height: var(--mobile-text-display-line);
+      margin: 0;
+    }
+
+    .home__divider {
+      margin: 23px 0 20px;
+    }
+
+    .home__access-list li {
+      margin-bottom: 8px;
+    }
+  }
 </style>
 
 <script>
   function initHomeMenuPin() {
     const heroLink = document.querySelector<HTMLElement>('.home__menu-link');
     const pinnedLink = document.querySelector<HTMLElement>('.home__menu-link-pinned');
-    const hero = document.querySelector<HTMLElement>('.home__hero');
-    if (!heroLink || !pinnedLink || !hero) return;
+    const headerLogoLink = document.querySelector<HTMLElement>('.site-header__logo-link');
+    const header = document.querySelector<HTMLElement>('.site-header');
+    if (!heroLink || !pinnedLink) return;
 
-    const headerHeight = parseFloat(
-      getComputedStyle(document.documentElement).getPropertyValue('--space-header-height')
-    );
-
-    // The hero link sits at the hero's own vertical center (see .home__menu-link
-    // CSS), so it reaches the header's bottom edge once scrollY passes heroCenter - headerHeight.
+    // Pins once the hero link is fully covered by the header (its own
+    // bottom edge scrolls past the header's bottom edge) — measured from
+    // the link itself (not assumed from the hero's center) since its
+    // position within the hero differs between the desktop (absolute,
+    // hero-centered) and mobile (flex-flow) layouts.
     let pinThreshold = 0;
 
+    const mobilePagePadding = parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--mobile-space-page-padding')
+    );
+
+    // Measured (not computed via vw math) so the slide lands exactly on the
+    // mobile page padding regardless of the logo's rendered width.
+    const measureLogoShift = () => {
+      if (!headerLogoLink) return;
+      const wasPinned = headerLogoLink.classList.contains('is-home-pinned');
+      headerLogoLink.classList.remove('is-home-pinned');
+      const centeredLeft = headerLogoLink.getBoundingClientRect().left;
+      headerLogoLink.classList.toggle('is-home-pinned', wasPinned);
+      const shift = mobilePagePadding - centeredLeft;
+      headerLogoLink.style.setProperty('--logo-pin-shift', `${shift}px`);
+    };
+
     const measure = () => {
-      const heroRect = hero.getBoundingClientRect();
-      const heroCenterFromDocTop = heroRect.top + window.scrollY + heroRect.height / 2;
-      pinThreshold = heroCenterFromDocTop - headerHeight;
+      const headerHeight = header?.getBoundingClientRect().height ?? 0;
+      const linkRect = heroLink.getBoundingClientRect();
+      const linkBottomFromDocTop = linkRect.bottom + window.scrollY;
+      pinThreshold = linkBottomFromDocTop - headerHeight;
+      measureLogoShift();
     };
 
     const update = () => {
       const pinned = window.scrollY >= pinThreshold;
       heroLink.classList.toggle('is-hidden', pinned);
       pinnedLink.classList.toggle('is-visible', pinned);
+      headerLogoLink?.classList.toggle('is-home-pinned', pinned);
     };
 
     measure();

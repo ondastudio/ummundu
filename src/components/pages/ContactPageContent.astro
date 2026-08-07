@@ -190,7 +190,7 @@ const successRedirect = routes.contactSuccess[lang];
       <p class="contact__error" data-error hidden>{t.requiredNote}</p>
     </div>
 
-    <div class="contact__field">
+    <div class="contact__field contact__field--group-start">
       <div class="contact__row">
         <label class="contact__field-label" for={`first-name-${lang}`}>{t.fields.firstName} <span class="contact__required">*</span></label>
         <input type="text" id={`first-name-${lang}`} name="first_name" required />
@@ -522,6 +522,103 @@ const successRedirect = routes.contactSuccess[lang];
     background: var(--color-text-muted-10);
     color: var(--color-text);
     outline: none;
+  }
+
+  @media (max-width: 767px) {
+    .contact {
+      margin-bottom: 114px;
+    }
+
+    .contact__label {
+      position: static;
+      padding-top: 152px;
+      font-size: var(--mobile-text-label-size);
+      line-height: var(--mobile-text-label-line);
+    }
+
+    .contact__content {
+      width: 100%;
+      margin-left: 0;
+      padding-top: 30px;
+    }
+
+    .contact__intro {
+      font-size: var(--mobile-text-body-size);
+      line-height: var(--mobile-text-body-line);
+      margin: 0 0 50px;
+    }
+
+    .contact__form {
+      width: 100%;
+      gap: 0;
+    }
+
+    .contact__field {
+      margin-top: 34px;
+    }
+
+    .contact__field:first-child {
+      margin-top: 0;
+    }
+
+    .contact__field--group-start {
+      margin-top: 46px;
+    }
+
+    .contact__row {
+      gap: 36px;
+    }
+
+    .contact__field-label {
+      font-size: var(--mobile-text-form-label-size);
+      line-height: var(--mobile-text-form-label-line);
+    }
+
+    .contact__field input,
+    .contact__field textarea {
+      font-size: var(--mobile-text-form-label-size);
+    }
+
+    .contact__field-group {
+      gap: 36px;
+    }
+
+    .contact__required-note,
+    .contact__privacy-note,
+    .contact__error {
+      font-size: var(--mobile-text-form-meta-size);
+      line-height: var(--mobile-text-form-meta-line);
+    }
+
+    .contact__required-note {
+      margin-top: 46px;
+    }
+
+    .contact__privacy-note {
+      margin-top: 10px;
+    }
+
+    .contact__submit {
+      font-size: var(--mobile-text-cta-size);
+      line-height: var(--mobile-text-cta-line);
+      padding: 6px 40px;
+      margin-top: 56px;
+    }
+
+    .dropdown__trigger {
+      font-size: var(--mobile-text-form-label-size);
+      line-height: var(--mobile-text-form-label-line);
+    }
+
+    .dropdown__chevron {
+      width: 16px;
+      height: 16px;
+    }
+
+    .dropdown__panel li {
+      font-size: var(--mobile-text-form-label-size);
+      line-height: var(--mobile-text-form-label-line);
+    }
   }
 </style>
 

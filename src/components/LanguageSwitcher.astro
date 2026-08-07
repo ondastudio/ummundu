@@ -51,4 +51,17 @@ const { current, alternate } = languageSwitcherCopy[lang];
     line-height: var(--text-footer-legal-line);
     letter-spacing: 0.03em;
   }
+
+  @media (max-width: 767px) {
+    .language-switcher[data-context='menu'] {
+      font-size: var(--mobile-text-footer-legal-size);
+      line-height: var(--mobile-text-footer-legal-line);
+    }
+
+    .language-switcher[data-context='footer'] {
+      gap: 4px;
+      font-size: var(--mobile-text-footer-legal-size);
+      line-height: var(--mobile-text-footer-legal-line);
+    }
+  }
 </style>
