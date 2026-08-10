@@ -7,9 +7,7 @@ require __DIR__ . '/lib/PHPMailer/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 
-// Swap this when the client's real mailbox exists (cPanel or Google
-// Workspace, pending the MX question — see spec's implementation note).
-const NOTIFICATION_TO = 'joana@ondastudio.co';
+const NOTIFICATION_TO = 'contact@ummundu.com';
 
 const PATH_CONTACT_EN = '/contact';
 const PATH_CONTACT_PT = '/pt/contacto';
