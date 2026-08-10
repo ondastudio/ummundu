@@ -16,7 +16,6 @@ const t = contactCopy[lang];
 const destinations = await getCollection('destinations');
 const years = getDepartureYears(new Date().getFullYear(), 2);
 const privacyHref = routes.privacy[lang];
-const successRedirect = routes.contactSuccess[lang];
 ---
 <Header lang={lang} variant="withMenu" />
 <main class="contact">
@@ -25,8 +24,22 @@ const successRedirect = routes.contactSuccess[lang];
   <div class="contact__content">
   <p class="contact__intro">{t.intro}</p>
 
-  <form class="contact__form" action="https://formspree.io/f/REPLACE_WITH_FORM_ID" method="POST" novalidate data-contact-form>
-    <input type="hidden" name="_next" value={`https://REPLACE_WITH_DOMAIN${successRedirect}`} />
+  <form
+    class="contact__form"
+    action={import.meta.env.DEV ? 'https://ummundu.com/send-contact.php' : 'send-contact.php'}
+    method="POST"
+    novalidate
+    data-contact-form
+  >
+    <input type="hidden" name="lang" value={lang} />
+    <input
+      type="text"
+      name="website"
+      class="contact__honeypot"
+      tabindex="-1"
+      autocomplete="off"
+      aria-hidden="true"
+    />
 
     <div class="contact__field">
       <div class="contact__row">
@@ -367,6 +380,14 @@ const successRedirect = routes.contactSuccess[lang];
 
   .contact__required {
     font-weight: 300;
+  }
+
+  .contact__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 
   .contact__required-note,
