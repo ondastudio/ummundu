@@ -1,4 +1,12 @@
 <?php
+require __DIR__ . '/smtp-config.php';
+require __DIR__ . '/lib/PHPMailer/Exception.php';
+require __DIR__ . '/lib/PHPMailer/PHPMailer.php';
+require __DIR__ . '/lib/PHPMailer/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
+
 // Swap this when the client's real mailbox exists in cPanel.
 const NOTIFICATION_TO = 'joana@ondastudio.co';
 
@@ -70,14 +78,31 @@ foreach ($fields as $label => $value) {
     $body .= $label . ': ' . clean_line($value) . "\n";
 }
 
-$subject = function_exists('mb_encode_mimeheader')
-    ? mb_encode_mimeheader('New contact form submission from ' . $firstName . ' ' . $lastName, 'UTF-8', 'B')
-    : 'New contact form submission from ' . $firstName . ' ' . $lastName;
+$mail = new PHPMailer(true);
 
-$headers = 'From: ' . $firstName . ' ' . $lastName . ' <' . $email . ">\r\n" .
-    'Reply-To: ' . $email . "\r\n" .
-    "Content-Type: text/plain; charset=UTF-8\r\n";
+try {
+    $mail->isSMTP();
+    $mail->Host = SMTP_HOST;
+    $mail->SMTPAuth = true;
+    $mail->Username = SMTP_USERNAME;
+    $mail->Password = SMTP_PASSWORD;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port = SMTP_PORT;
+    $mail->CharSet = PHPMailer::CHARSET_UTF8;
 
-mail(NOTIFICATION_TO, $subject, $body, $headers);
+    // From must be the authenticated mailbox — most SMTP servers reject or
+    // flag a From address that doesn't match the logged-in account.
+    $mail->setFrom(SMTP_USERNAME, $firstName . ' ' . $lastName);
+    $mail->addReplyTo($email, $firstName . ' ' . $lastName);
+    $mail->addAddress(NOTIFICATION_TO);
+
+    $mail->Subject = 'New contact form submission from ' . $firstName . ' ' . $lastName;
+    $mail->Body = $body;
+
+    $mail->send();
+} catch (PHPMailerException $e) {
+    // Fall through to the success redirect either way — a mail failure
+    // shouldn't leave the visitor looking at a broken page.
+}
 
 redirect_to($successPath);

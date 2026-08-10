@@ -13,6 +13,16 @@ Production hosting is WebHS shared hosting (cPanel), confirmed to support PHP an
 
 Replace the Formspree integration with a self-hosted PHP mail handler, with the auto-confirmation handled by cPanel's built-in Autoresponder feature (not custom code), and a safe way to test the real email-sending flow before the client's mailbox exists.
 
+## Implementation note (discovered during build/testing, superseding parts of the plan below)
+
+The plan below assumed plain PHP `mail()` would work. It doesn't: this host has `mail()` disabled server-side (`disable_functions` includes `mail`), a common anti-spam policy that forces sending through an authenticated mailbox instead. This changed two things not anticipated below:
+
+- **Sending mechanism**: switched to authenticated SMTP via a vendored copy of PHPMailer (`public/lib/PHPMailer/`, pinned to v6.9.3, no Composer — plain `require`s) instead of `mail()`. This is a deviation from the "no external libraries" constraint below, made deliberately after confirming `mail()` was a dead end.
+- **Credentials**: authenticated sending requires a real password, which — unlike the credential-free `mail()` approach — must never be committed to git. `public/smtp-config.php` holds the SMTP host/username/password, is listed in `.gitignore`, and is uploaded directly via FTP, never through git.
+- **From address**: since most SMTP servers reject/flag a From address that doesn't match the authenticated account, the notification email's "From" is the mailbox itself (not the visitor, as originally planned), with the visitor's address set as Reply-To instead. **Open risk**: this means the cPanel Autoresponder auto-reply-to-visitor trick (which relies on replying to whoever the message's From/Reply-To is) has not yet been verified to actually fire off a Reply-To rather than a From — that verification is still pending, deferred to when `contact@ummundu.com`'s Autoresponder is actually configured. If it turns out cPanel only replies based on From, the auto-confirmation will need to move into this script as custom code instead (bilingual, no longer client-editable without a code change).
+
+A temporary mailbox, `test@ummundu.com`, was created in cPanel purely to have something to authenticate as during testing (not a recipient) — to be deleted once testing wraps up, per the same "swap `NOTIFICATION_TO`, real mailbox, real Autoresponder" cutover described below.
+
 ## Architecture
 
 ```
