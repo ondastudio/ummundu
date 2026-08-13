@@ -101,7 +101,9 @@ try {
     $mail->send();
 } catch (PHPMailerException $e) {
     // Fall through to the success redirect either way — a mail failure
-    // shouldn't leave the visitor looking at a broken page.
+    // shouldn't leave the visitor looking at a broken page. Logged so
+    // failures are still visible server-side (check the host's PHP error log).
+    error_log('send-contact.php mail failure: ' . $mail->ErrorInfo);
 }
 
 redirect_to($successPath);
