@@ -1,7 +1,11 @@
 <?php
 require __DIR__ . '/resend-config.php';
 
-const FROM_ADDRESS = 'ummundu <no-reply@ummundu.com>';
+const NOTIFICATION_FROM = 'ummundu <no-reply@ummundu.com>';
+
+// Client requirement: the auto-reply must come From/Reply-To contact@ummundu.com so
+// visitor replies land directly in that inbox (no separate no-reply identity for this one).
+const CONTACT_ADDRESS = 'ummundu <contact@ummundu.com>';
 
 // TODO: swap to 'contact@ummundu.com' once testing via Resend is confirmed working.
 const NOTIFICATION_TO = 'joana@ondastudio.co';
@@ -46,9 +50,9 @@ function clean_line($value) {
 
 // Sends via the Resend HTTP API. Logs and returns false on failure instead of throwing,
 // since a mail failure shouldn't block the visitor's redirect to the success page.
-function send_resend_email($to, $subject, $text, $replyTo = null) {
+function send_resend_email($from, $to, $subject, $text, $replyTo = null) {
     $payload = [
-        'from' => FROM_ADDRESS,
+        'from' => $from,
         'to' => [$to],
         'subject' => $subject,
         'text' => $text,
@@ -128,6 +132,7 @@ foreach ($fields as $label => $value) {
 }
 
 send_resend_email(
+    NOTIFICATION_FROM,
     NOTIFICATION_TO,
     'New contact form submission from ' . $firstName . ' ' . $lastName,
     $body,
@@ -137,6 +142,6 @@ send_resend_email(
 $autoReplySubject = str_replace('{first_name}', $firstName, AUTO_REPLY_COPY[$lang]['subject']);
 $autoReplyBody = str_replace('{first_name}', $firstName, AUTO_REPLY_COPY[$lang]['body']);
 
-send_resend_email($email, $autoReplySubject, $autoReplyBody, NOTIFICATION_TO);
+send_resend_email(CONTACT_ADDRESS, $email, $autoReplySubject, $autoReplyBody, CONTACT_ADDRESS);
 
 redirect_to($successPath);
