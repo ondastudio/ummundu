@@ -4,3 +4,4 @@ dist/
 .env
 .DS_Store
 public/smtp-config.php
+public/resend-config.php

@@ -1,18 +1,32 @@
 <?php
-require __DIR__ . '/smtp-config.php';
-require __DIR__ . '/lib/PHPMailer/Exception.php';
-require __DIR__ . '/lib/PHPMailer/PHPMailer.php';
-require __DIR__ . '/lib/PHPMailer/SMTP.php';
+require __DIR__ . '/resend-config.php';
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception as PHPMailerException;
+const FROM_ADDRESS = 'ummundu <no-reply@ummundu.com>';
 
-const NOTIFICATION_TO = 'contact@ummundu.com';
+// TODO: swap to 'contact@ummundu.com' once testing via Resend is confirmed working.
+const NOTIFICATION_TO = 'joana@ondastudio.co';
 
 const PATH_CONTACT_EN = '/contact';
 const PATH_CONTACT_PT = '/pt/contacto';
 const PATH_SUCCESS_EN = '/contact/success';
 const PATH_SUCCESS_PT = '/pt/contacto/obrigado';
+
+const AUTO_REPLY_COPY = [
+    'en' => [
+        'subject' => "We've received your request, {first_name}!",
+        'body' => "Hi {first_name},\n\n"
+            . "Thank you for reaching out to ummundu! We've received your trip request and a member of our team will get back to you shortly.\n\n"
+            . "In the meantime, feel free to reply to this email if there's anything else you'd like to share.\n\n"
+            . "Talk soon,\nThe ummundu Team",
+    ],
+    'pt' => [
+        'subject' => 'Recebemos o teu pedido, {first_name}!',
+        'body' => "Olá {first_name},\n\n"
+            . "Obrigado por contactares a ummundu! Recebemos o teu pedido de viagem e a nossa equipa entrará em contacto brevemente.\n\n"
+            . "Entretanto, sente-te à vontade para responder a este email caso queiras partilhar mais algum detalhe.\n\n"
+            . "Até já,\nEquipa ummundu",
+    ],
+];
 
 function redirect_to($path) {
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
@@ -28,6 +42,42 @@ function field($name) {
 // Strips CR/LF so submitted values can't inject extra mail headers.
 function clean_line($value) {
     return str_replace(["\r", "\n"], ' ', $value);
+}
+
+// Sends via the Resend HTTP API. Logs and returns false on failure instead of throwing,
+// since a mail failure shouldn't block the visitor's redirect to the success page.
+function send_resend_email($to, $subject, $text, $replyTo = null) {
+    $payload = [
+        'from' => FROM_ADDRESS,
+        'to' => [$to],
+        'subject' => $subject,
+        'text' => $text,
+    ];
+    if ($replyTo !== null) {
+        $payload['reply_to'] = $replyTo;
+    }
+
+    $ch = curl_init('https://api.resend.com/emails');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: Bearer ' . RESEND_API_KEY,
+            'Content-Type: application/json',
+        ],
+        CURLOPT_POSTFIELDS => json_encode($payload, JSON_UNESCAPED_UNICODE),
+        CURLOPT_TIMEOUT => 10,
+    ]);
+    $response = curl_exec($ch);
+    $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if ($curlError !== '' || $statusCode < 200 || $statusCode >= 300) {
+        error_log('send-contact.php Resend send failure (to: ' . $to . '): ' . ($curlError !== '' ? $curlError : $response));
+        return false;
+    }
+    return true;
 }
 
 $lang = field('lang') === 'pt' ? 'pt' : 'en';
@@ -77,33 +127,16 @@ foreach ($fields as $label => $value) {
     $body .= $label . ': ' . clean_line($value) . "\n";
 }
 
-$mail = new PHPMailer(true);
+send_resend_email(
+    NOTIFICATION_TO,
+    'New contact form submission from ' . $firstName . ' ' . $lastName,
+    $body,
+    $email
+);
 
-try {
-    $mail->isSMTP();
-    $mail->Host = SMTP_HOST;
-    $mail->SMTPAuth = true;
-    $mail->Username = SMTP_USERNAME;
-    $mail->Password = SMTP_PASSWORD;
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail->Port = SMTP_PORT;
-    $mail->CharSet = PHPMailer::CHARSET_UTF8;
+$autoReplySubject = str_replace('{first_name}', $firstName, AUTO_REPLY_COPY[$lang]['subject']);
+$autoReplyBody = str_replace('{first_name}', $firstName, AUTO_REPLY_COPY[$lang]['body']);
 
-    // From must be the authenticated mailbox — most SMTP servers reject or
-    // flag a From address that doesn't match the logged-in account.
-    $mail->setFrom(SMTP_USERNAME, $firstName . ' ' . $lastName);
-    $mail->addReplyTo($email, $firstName . ' ' . $lastName);
-    $mail->addAddress(NOTIFICATION_TO);
-
-    $mail->Subject = 'New contact form submission from ' . $firstName . ' ' . $lastName;
-    $mail->Body = $body;
-
-    $mail->send();
-} catch (PHPMailerException $e) {
-    // Fall through to the success redirect either way — a mail failure
-    // shouldn't leave the visitor looking at a broken page. Logged so
-    // failures are still visible server-side (check the host's PHP error log).
-    error_log('send-contact.php mail failure: ' . $mail->ErrorInfo);
-}
+send_resend_email($email, $autoReplySubject, $autoReplyBody, NOTIFICATION_TO);
 
 redirect_to($successPath);
